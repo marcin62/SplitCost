@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:splitcost/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
 
   final AuthService _auth =AuthService();
 
@@ -21,7 +21,7 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Zaloguj sie w SplitCost'),
+        title: Text('Zarejestruj sie w SplitCost'),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
@@ -47,7 +47,7 @@ class _SignInState extends State<SignIn> {
                   backgroundColor: MaterialStateProperty.all(Colors.pink[400]),
                 ),
                 child: Text(
-                  'Zaloguj się',
+                  'Zarejestruj się',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
