@@ -10,8 +10,12 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final user = Provider.of<MyUser>(context);
-    print(user);
+
     // Check if Login then show apropriate page
-    return Authenticate();
+    if (user == null){
+      return Authenticate();
+    } else {
+      return Home();
+    }
   }
 }
