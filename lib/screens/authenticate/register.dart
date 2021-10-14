@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:splitcost/services/auth.dart';
 
 class Register extends StatefulWidget {
+
+  final Function toggleView;
+  Register({this.toggleView});
+
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -22,6 +26,18 @@ class _RegisterState extends State<Register> {
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
         title: Text('Zarejestruj sie w SplitCost'),
+        actions: <Widget>[
+          ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.brown[400]),
+            ),
+            icon: Icon(Icons.person),
+            label: Text('Zaloguj się'),
+            onPressed: () {
+              widget.toggleView();
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),

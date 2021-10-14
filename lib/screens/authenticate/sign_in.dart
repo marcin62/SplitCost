@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:splitcost/services/auth.dart';
 
 class SignIn extends StatefulWidget {
+
+  final Function toggleView;
+  SignIn({this.toggleView});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -22,6 +26,18 @@ class _SignInState extends State<SignIn> {
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
         title: Text('Zaloguj sie w SplitCost'),
+        actions: <Widget>[
+          ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.brown[400]),
+            ),
+            icon: Icon(Icons.person),
+            label: Text('Zarejestruj się'),
+            onPressed: () {
+              widget.toggleView();
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
