@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splitcost/services/auth.dart';
+import 'package:splitcost/style/colors.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -21,15 +22,15 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      backgroundColor: MyColors.color1,
       appBar: AppBar(
-        backgroundColor: Colors.brown[400],
+        backgroundColor: MyColors.color2,
         elevation: 0.0,
         title: Text('Zaloguj sie w SplitCost'),
         actions: <Widget>[
           ElevatedButton.icon(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.brown[400]),
+              backgroundColor: MaterialStateProperty.all(MyColors.color2),
             ),
             icon: Icon(Icons.person),
             label: Text('Zarejestruj się'),
@@ -60,11 +61,11 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0,),
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.pink[400]),
+                  backgroundColor: MaterialStateProperty.all(MyColors.color2),
                 ),
                 child: Text(
                   'Zaloguj się',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: MyColors.color3),
                 ),
                 onPressed: () async {
                   print(email);
