@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/style/colors.dart';
+import 'package:splitcost/style/inputdecoration.dart';
+import 'package:splitcost/style/loading.dart';
 
 class Register extends StatefulWidget {
 
@@ -15,6 +17,7 @@ class _RegisterState extends State<Register> {
 
   final AuthService _auth =AuthService();
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   // text field state
   String email = '';
@@ -23,7 +26,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       backgroundColor: MyColors.color1,
       appBar: AppBar(
         backgroundColor: MyColors.color2,
@@ -50,6 +53,7 @@ class _RegisterState extends State<Register> {
             children: <Widget>[
               SizedBox(height: 20.0),
               TextFormField(
+                decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email'),
                 validator: (val) => val.isEmpty ? 'Wpisz Email' : null,
                 onChanged: (val) {
                   setState(() => email = val);
@@ -57,6 +61,7 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 20.0),
               TextFormField(
+                decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło'),
                 obscureText: true,
                 validator: (val) => val.length < 6 ? 'Wpisz dłuższe hasło (6+)' : null,
                 onChanged: (val) {
@@ -74,9 +79,13 @@ class _RegisterState extends State<Register> {
                 ),
                 onPressed: () async {
                   if(_formKey.currentState.validate()){
+                    setState(() => loading = true);
                     dynamic result = await _auth.registerWithEmailAndPassword(email, password);
                     if(result == null){
-                      setState(() => error = 'Prosze podaj prawidłowy email');
+                      setState(() {
+                        error = 'Prosze podaj prawidłowy email';
+                        loading = false;
+                      });
                     }
                   }
                 },
