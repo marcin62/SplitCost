@@ -27,6 +27,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: MyColors.color1,
       appBar: AppBar(
         backgroundColor: MyColors.color2,
@@ -45,60 +46,62 @@ class _SignInState extends State<SignIn> {
           ),
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              TextFormField(
-                decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email'),
-                validator: (val) => val.isEmpty ? 'Wpisz Email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
-              ),
-              SizedBox(height: 20.0),
-              TextFormField(
-                decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło'),
-                obscureText: true,
-                validator: (val) => val.length < 6 ? 'Wpisz dłuższe hasło (6+)' : null,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-              ),
-              SizedBox(height: 20.0,),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MyColors.color2),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 20.0),
+                TextFormField(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email'),
+                  validator: (val) => val.isEmpty ? 'Wpisz Email' : null,
+                  onChanged: (val) {
+                    setState(() => email = val);
+                  },
                 ),
-                child: Text(
-                  'Zaloguj się',
-                  style: TextStyle(color: MyColors.color3),
+                SizedBox(height: 20.0),
+                TextFormField(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło'),
+                  obscureText: true,
+                  validator: (val) => val.length < 6 ? 'Wpisz dłuższe hasło (6+)' : null,
+                  onChanged: (val) {
+                    setState(() => password = val);
+                  },
                 ),
-                onPressed: () async {
-                  if(_formKey.currentState.validate()){
-                    setState(() => loading = true);
-                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                    if(result == null){
-                      setState(() {
-                        error = 'Nie udało się zalogować z tymi danymi';
-                        loading = false;
-                      });
+                SizedBox(height: 20.0,),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(MyColors.color2),
+                  ),
+                  child: Text(
+                    'Zaloguj się',
+                    style: TextStyle(color: MyColors.color3),
+                  ),
+                  onPressed: () async {
+                    if(_formKey.currentState.validate()){
+                      setState(() => loading = true);
+                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+                      if(result == null){
+                        setState(() {
+                          error = 'Nie udało się zalogować z tymi danymi';
+                          loading = false;
+                        });
+                      }
                     }
-                  }
-                },
-              ),
-              SizedBox(height: 12.0,),
-              Text(
-                error,
-                style: TextStyle(
-                  color: MyColors.error,
-                  fontSize: 14.0,
+                  },
                 ),
-              )
-            ],
+                SizedBox(height: 12.0,),
+                Text(
+                  error,
+                  style: TextStyle(
+                    color: MyColors.error,
+                    fontSize: 14.0,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
