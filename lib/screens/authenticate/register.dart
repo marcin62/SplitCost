@@ -33,23 +33,6 @@ class _RegisterState extends State<Register> {
     return loading ? Loading() : Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: MyColors.color1,
-      appBar: AppBar(
-        backgroundColor: MyColors.color2,
-        elevation: 0.0,
-        title: Text('Zarejestruj sie w SplitCost'),
-        actions: <Widget>[
-          ElevatedButton.icon(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(MyColors.color2),
-            ),
-            icon: Icon(Icons.person),
-            label: Text('Zaloguj się'),
-            onPressed: () {
-              widget.toggleView();
-            },
-          ),
-        ],
-      ),
       body:SingleChildScrollView( 
         child: Container(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
@@ -57,9 +40,32 @@ class _RegisterState extends State<Register> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                SizedBox(height: 20.0),
+                SizedBox(height: 50.0),
+                Text(
+                  'Zarejestruj się w SplitCost',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: MyColors.white,fontSize: 35,),
+                ),
+                SizedBox(height: 20,),
+                Container(
+                              height: 150.0,
+                              width: 150.0,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/logo.jpg'),
+                                    fit: BoxFit.fill,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      width: 2, color: Colors.white)),
+                            ),
+                SizedBox(height: 20,),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa użytkownika'),
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa użytkownika',
+                   suffixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.person,
+                                    color: MyColors.color2, size: 25.0)),),
                   validator: (val) => val.length == 0 ? 'Wpisz nazwę użytkownika' : null,
                   onChanged: (val) {
                     setState(() => userName = val);
@@ -67,16 +73,21 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Numer Telefonu'),
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Numer Telefonu', suffixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.phone,
+                                    color: MyColors.color2, size: 25.0)),),
                   validator: (val) => validateMobile(val),
-                  // validator: (val) => val.length != 9 || validateMobile(val) ? 'Wpisz numer telefonu ( 9 cyfr )' : null,
                   onChanged: (val) {
                     setState(() => phone = val);
                   },
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email'),
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email', suffixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.email,
+                                    color: MyColors.color2, size: 25.0)),),
                   validator: (val) => val.isEmpty ? 'Wpisz Email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
@@ -84,7 +95,10 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło'),
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło', suffixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.lock,
+                                    color: MyColors.color2, size: 25.0)),),
                   obscureText: true,
                   validator: (val) => val.length < 6 ? 'Wpisz dłuższe hasło (6+)' : null,
                   onChanged: (val) {
@@ -93,7 +107,10 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło'),
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Powtórz Hasło', suffixIcon: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.lock,
+                                    color: MyColors.color2, size: 25.0)),),
                   obscureText: true,
                   validator: (val) => password != password2 ? 'Hasła się różnią' : null,
                   onChanged: (val) {
@@ -102,18 +119,15 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0,),
                 ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(MyColors.color2),
-                  ),
+                  style: MyDecoration.mybuttonStyle,
                   child: Text(
                     'Zarejestruj się',
-                    style: TextStyle(color: MyColors.color3),
+                    style: TextStyle(color: MyColors.white,fontSize: 20)
                   ),
                   onPressed: () async {
                     if(_formKey.currentState.validate()){
                       setState(() => loading = true);
                       dynamic result = await _auth.checkIfUsernameIsAvaviable(userName);
-                      print(result);
                       if(result !=0 ){
                         setState(() {
                           error = 'Nazwa użytkownika jest już zajęta, podaj inną';
@@ -140,11 +154,24 @@ class _RegisterState extends State<Register> {
                     }
                   },
                 ),
+                SizedBox(height: 20.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Masz konto? ',style: TextStyle(color: MyColors.white,fontSize: 17),),
+                    GestureDetector(
+                    onTap: () {
+                      widget.toggleView();
+                    },
+                    child :Text('Zaloguj się',style: TextStyle(fontWeight:FontWeight.bold,color: MyColors.white,fontSize: 17),),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 12.0,),
                 Text(
                   error,
                   style: TextStyle(
-                    color: MyColors.error,
+                    color: MyColors.red,
                     fontSize: 14.0,
                   ),
                 )

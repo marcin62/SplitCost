@@ -5,6 +5,7 @@ import 'package:splitcost/models/myUser.dart';
 import 'package:splitcost/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:splitcost/services/auth.dart';
+import 'package:splitcost/style/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
+        theme: new ThemeData(
+          canvasColor: MyColors.color2,
+        ),
         home: Wrapper(),
       ),
     );
