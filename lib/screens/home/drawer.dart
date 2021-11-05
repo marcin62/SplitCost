@@ -21,7 +21,7 @@ class DrawerWidget extends StatelessWidget {
                   Icons.info,
                   color: Colors.white,
                 ),
-                title: new Text('About Page'),
+                title: new Text('Autor',style: TextStyle(color: MyColors.white),),
                 onTap: () {
                   // Navigator.push(
                   //   context,
@@ -40,7 +40,7 @@ class DrawerWidget extends StatelessWidget {
                   Icons.settings,
                   color: Colors.white,
                 ),
-                title: new Text('Settings'),
+                title: new Text('Ustawienia',style: TextStyle(color: MyColors.white)),
                 onTap: () {
                   // Navigator.push(
                   //   context,
@@ -59,7 +59,7 @@ class DrawerWidget extends StatelessWidget {
                   Icons.person,
                   color: Colors.white,
                 ),
-                title: new Text('Sign out'),
+                title: new Text('Wyloguj się',style: TextStyle(color: MyColors.white)),
                 onTap: () async {
                   await auth.signOut();
                 },
