@@ -18,7 +18,7 @@ class _GroupsViewState extends State<GroupsView> {
     return Scaffold(
       backgroundColor: MyColors.color1,
       body: StreamBuilder(
-        stream: DatabaseService().groupsCollection.snapshots(),
+        stream: DatabaseService().groupsCollection.orderBy('groupName').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if(!snapshot.hasData){
             return Center(
@@ -34,10 +34,6 @@ class _GroupsViewState extends State<GroupsView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // await DatabaseService().updateGroupData("Dom",Uuid().v4().toString(),"1234");
-          // await DatabaseService().updateGroupData("Szkoła",Uuid().v4().toString(),"1234");
-          // await DatabaseService().updateGroupData("Praca",Uuid().v4().toString(),"1234");
-          // await DatabaseService().updateGroupData("Wakacje",Uuid().v4().toString(),"1234");
           // // Add your onPressed code here!
         },
         splashColor: MyColors.color4,
