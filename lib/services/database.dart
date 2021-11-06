@@ -7,6 +7,7 @@ class DatabaseService {
 
   // collection reference
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('myUser');
+  final CollectionReference groupsCollection = FirebaseFirestore.instance.collection('groups');
 
   Future updateUserData(String userName, String uid, String phoneNumber, String email) async {
     return await userCollection.doc(uid).set({
@@ -14,6 +15,14 @@ class DatabaseService {
       'userId' : uid,
       'phoneNumber' : phoneNumber,
       'email': email,
+    });
+  }
+
+   Future updateGroupData(String groupName, String groupid, String ownerid) async {
+    return await groupsCollection.doc(groupid).set({
+      'groupName' : groupName,
+      'groupId' : groupid,
+      'ownerId' : ownerid,
     });
   }
 
