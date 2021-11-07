@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
+import 'package:splitcost/validators/errordialog.dart';
 
+ final FirebaseAuth auth = FirebaseAuth.instance;
+  final User user = auth.currentUser;
+  final uid = user.uid;
 
 class Group extends StatefulWidget {
   final String groupname;
@@ -48,10 +54,21 @@ class _GroupState extends State<Group> {
               Column(
                 children: [
                   Text(widget.groupname, style: TextStyle(color: MyColors.white,fontSize: 25),),
-                  Text(widget.ownerid, style: TextStyle(color: MyColors.white,fontSize: 15),),
+                  //Text(widget.ownerid, style: TextStyle(color: MyColors.white,fontSize: 15),),
                   Text('Ilość członków: 0', style: TextStyle(color: MyColors.white,fontSize: 15),),
                 ],
-              )
+              ),
+              SizedBox( width: 20,),
+              GestureDetector(
+                onTap: () async {
+                  if(widget.ownerid == uid)
+                  {
+                      await DatabaseService().groupsCollection.doc(widget.groupid).delete();
+                  }else {
+                      ErrorDialog(error:"Tylko właściciel może usnunąć grupę",context: context).showError();
+                  }
+                },
+                child :Icon(Icons.delete, color: MyColors.red, size: 40,)),
               ],), 
                SizedBox(height: 10,),
           ],
