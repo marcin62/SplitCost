@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/validators/errordialog.dart';
+
+import 'groupdetails.dart';
 
  final FirebaseAuth auth = FirebaseAuth.instance;
   final User user = auth.currentUser;
@@ -59,16 +62,26 @@ class _GroupState extends State<Group> {
                 ],
               ),
               SizedBox( width: 20,),
+              // GestureDetector(
+              //   onTap: () async {
+              //     if(widget.ownerid == uid)
+              //     {
+              //         await DatabaseService().groupsCollection.doc(widget.groupid).delete();
+              //     }else {
+              //         ErrorDialog(error:"Tylko właściciel może usnunąć grupę",context: context).showError();
+              //     }
+              //   },
+              //   child :Icon(Icons.delete, color: MyColors.red, size: 40,)),
+                 SizedBox(height: 10,),
               GestureDetector(
-                onTap: () async {
-                  if(widget.ownerid == uid)
-                  {
-                      await DatabaseService().groupsCollection.doc(widget.groupid).delete();
-                  }else {
-                      ErrorDialog(error:"Tylko właściciel może usnunąć grupę",context: context).showError();
-                  }
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid))),
+                  );
                 },
-                child :Icon(Icons.delete, color: MyColors.red, size: 40,)),
+                child: Icon(Icons.info, color: MyColors.red, size: 40,) ,
+              )
               ],), 
                SizedBox(height: 10,),
           ],

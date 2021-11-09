@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
 
   Widget _selectScreen(BuildContext context){
     if(_selectedIndex == 0) return GroupsView(); 
-    if(_selectedIndex == 2) return Users();
+    if(_selectedIndex == 1) return Users();
     return Notifications();
   }
 
