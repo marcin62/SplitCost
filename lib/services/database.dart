@@ -26,6 +26,12 @@ class DatabaseService {
     });
   }
 
+  Future updateMembersOfGroup(List uid,String groupid) async{
+    return await groupsCollection.doc(groupid).update({
+      'members' : uid,
+    });
+  }
+
   Future checUserName(String userName) async {
     QuerySnapshot result = await userCollection.where('userName', isEqualTo: userName).get();
     List <DocumentSnapshot> documents = result.docs;

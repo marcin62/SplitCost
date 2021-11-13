@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:splitcost/screens/groups/members.dart';
 import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
@@ -35,7 +36,7 @@ class _GroupsViewState extends State<GroupsView> {
           }
           return ListView(
             children: snapshot.data.docs.map((document){
-              return Group(groupname: document['groupName'],groupid: document['groupId'],ownerid: document['ownerId'],);
+              return Group(groupname: document['groupName'],groupid: document['groupId'],ownerid: document['ownerId'],members : document['members']);
             }).toList(),
           );
         },
@@ -96,25 +97,4 @@ class _GroupsViewState extends State<GroupsView> {
       }
     );
   }
-
-  // void _showError(String error){
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         backgroundColor: MyColors.color5,
-  //                 shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(30),
-  //         ),
-  //         title: Text(error),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: ()=> Navigator.pop(context),
-  //            child: Text("Ok",style: TextStyle(color: Colors.black),)
-  //            )
-  //         ],
-  //       );
-  //     }
-  //   );
-  // }
 }

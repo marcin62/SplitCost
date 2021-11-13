@@ -15,8 +15,9 @@ class Group extends StatefulWidget {
   final String groupname;
   final String ownerid;
   final String groupid;
+  final List members;
 
-  Group({this.groupname,this.groupid,this.ownerid});
+  Group({this.groupname,this.groupid,this.ownerid,this.members});
 
   @override
   _GroupState createState() => _GroupState();
@@ -77,8 +78,8 @@ class _GroupState extends State<Group> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid))),
-                  );
+                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid,members: widget.members))),
+                  ).then((value) => setState(()=>{}));
                 },
                 child: Icon(Icons.info, color: MyColors.red, size: 40,) ,
               )

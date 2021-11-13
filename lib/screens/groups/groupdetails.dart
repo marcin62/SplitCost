@@ -25,7 +25,7 @@ class _GroupDetailState extends State<GroupDetail> {
 
   Widget _selectScreen(BuildContext context){ 
     if(_selectedIndex == 0) return Expenses(group: widget.group); 
-    if(_selectedIndex == 1) return Members();
+    if(_selectedIndex == 1) return Members(group: widget.group);
     else return SettingsView();
   }
 
@@ -33,7 +33,7 @@ class _GroupDetailState extends State<GroupDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: MyColors.color2,
         elevation: 0.0,
