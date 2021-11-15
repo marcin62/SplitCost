@@ -18,17 +18,27 @@ class DatabaseService {
     });
   }
 
-   Future updateGroupData(String groupName, String groupid, String ownerid) async {
+   Future updateGroupData(String groupName, String groupid, String ownerid, List members) async {
     return await groupsCollection.doc(groupid).set({
       'groupName' : groupName,
       'groupId' : groupid,
       'ownerId' : ownerid,
+      'members' : members,
     });
   }
 
   Future updateMembersOfGroup(List uid,String groupid) async{
     return await groupsCollection.doc(groupid).update({
       'members' : uid,
+    });
+  }
+
+  Future addExpenses(String groupid,String price, String ownerid, String expenseid, String description ) async {
+    return await groupsCollection.doc(groupid).collection('expenses').doc(expenseid).set({
+      'expenseid' : expenseid,
+      'ownerid' : ownerid,
+      'price' : price,
+      'description' : description,
     });
   }
 

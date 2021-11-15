@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
-import 'package:splitcost/screens/groups/expenses.dart';
+import 'package:splitcost/screens/groups/expenses/expenses.dart';
 import 'package:splitcost/screens/groups/members.dart';
 import 'package:splitcost/screens/groups/settings.dart';
 import 'package:splitcost/style/colors.dart';

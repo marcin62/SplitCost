@@ -82,7 +82,9 @@ class _GroupsViewState extends State<GroupsView> {
                   ErrorDialog(error: "Nie podałeś nazwy grupy",context: context).showError();
                   //_showError("Nie podałeś nazwy grupy");
                  else{
-                  await DatabaseService().updateGroupData(groupName, Uuid().v4(), uid);
+                  List members = new List();
+                  members.add(uid);
+                  await DatabaseService().updateGroupData(groupName, Uuid().v4(), uid, members);
                   Navigator.pop(context);
                  }
                  },

@@ -10,3 +10,14 @@ String validateMobile(String value) {
   }
   return null;
 }  
+
+
+String isNumeric(String s) {
+  if (s.length==0) {
+    return "Nie podałeś kwoty";
+  }
+  if(double. tryParse(s) == null){
+    return "To nie jest poprawna liczba";
+  }
+  return null;
+}

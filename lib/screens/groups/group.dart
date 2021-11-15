@@ -59,7 +59,7 @@ class _GroupState extends State<Group> {
                 children: [
                   Text(widget.groupname, style: TextStyle(color: MyColors.white,fontSize: 25),),
                   //Text(widget.ownerid, style: TextStyle(color: MyColors.white,fontSize: 15),),
-                  Text('Ilość członków: 0', style: TextStyle(color: MyColors.white,fontSize: 15),),
+                  Text('Ilość członków: '+widget.members.length.toString(), style: TextStyle(color: MyColors.white,fontSize: 15),),
                 ],
               ),
               SizedBox( width: 20,),
