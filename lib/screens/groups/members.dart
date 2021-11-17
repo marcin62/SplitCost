@@ -22,6 +22,7 @@ class Members extends StatefulWidget {
 class _MembersState extends State<Members> {
   @override
  Widget build(BuildContext context) {
+     return StatefulBuilder( builder: (context,setState){
     return Scaffold(
       backgroundColor: MyColors.color1,
       body: Container(
@@ -56,6 +57,7 @@ class _MembersState extends State<Members> {
                     child: CircularProgressIndicator(),
                   );
                 }
+                return StatefulBuilder( builder: (context,setState){
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
                     if(widget.group.members.contains(document['userId'])){
@@ -76,7 +78,7 @@ class _MembersState extends State<Members> {
                     else
                     return SizedBox(height: 0,);
                   }).toList(),
-                );
+                ); });
               },
             ),),
           ],
@@ -90,7 +92,7 @@ class _MembersState extends State<Members> {
         child: Icon(Icons.add,color: MyColors.color1,),
         backgroundColor: MyColors.color5,
       ),
-    );
+    );});
   }
 
   void _showDialog(){
@@ -99,6 +101,7 @@ class _MembersState extends State<Members> {
     showDialog(
       context: context, 
       builder: (BuildContext context){
+        return StatefulBuilder( builder: (context,setState){
          return AlertDialog(
             backgroundColor: MyColors.color4,
             title: Text("Podaj numer telefonu nowego uczestnika"),
@@ -159,7 +162,7 @@ class _MembersState extends State<Members> {
                 child: Text("Anuluj",style: TextStyle(color: Colors.black),),
               ),
             ],
-            );
+            );});
       }
     );
   }

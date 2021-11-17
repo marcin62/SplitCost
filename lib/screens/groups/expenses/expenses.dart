@@ -94,68 +94,123 @@ class _ExpensesState extends State<Expenses> {
 
 
   void _showDialog(){
+    List<bool> bools = new List<bool>.filled(widget.group.members.length, false);
+    bool check = true;
     String price = "";
     String description = "";
     String err;
     showDialog(
       context: context, 
       builder: (BuildContext context){
-         return AlertDialog(
-            backgroundColor: MyColors.color4,
-            title: Text("Podaj Poniesiony Koszt"),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            content: Column(
-              children: [
-                TextFormField(
-                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',
-                                suffixIcon: Padding(
-                                    padding: EdgeInsets.only(right: 20),
-                                    child: Icon(Icons.description,
-                                        color: MyColors.color2, size: 25.0)),
-                              ),
-                      onChanged: (val) {
-                        setState(() => description = val);
-                      },
+        return StatefulBuilder( builder: (context,setState){
+         return Container(
+           width: double.maxFinite,
+           child: AlertDialog(
+              backgroundColor: MyColors.color4,
+              title: Text("Podaj Poniesiony Koszt"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',
+                                  suffixIcon: Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Icon(Icons.description,
+                                          color: MyColors.color2, size: 25.0)),
+                                ),
+                        onChanged: (val) {
+                          setState(() => description = val);
+                        },
+                  ),
+                  SizedBox(height: 10,),
+                  TextFormField(
+                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',
+                                  suffixIcon: Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Icon(Icons.money,
+                                          color: MyColors.color2, size: 25.0)),
+                                ),
+                        onChanged: (val) {
+                          setState(() => price = val);
+                        },
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    width: 300,
+                    height: 300,
+                    child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: widget.group.members.length,
+                    itemBuilder: (context, index){
+                      return FutureBuilder(
+                        future: getUsersKey(widget.group.members[index]?? null), // a previously-obtained Future<String> or null
+                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if(snapshot.hasData){
+                          return CheckboxListTile(
+                            title: Text(snapshot.data),
+                            secondary: Icon(Icons.money),
+                            controlAffinity: ListTileControlAffinity.platform,
+                            value: bools[index],
+                            onChanged: (bool value){
+                              setState(() {
+                                bools[index] = value;
+                              });
+                          },
+                          activeColor: MyColors.color1,
+                          checkColor: MyColors.color4,
+                      );}
+                        else{
+                          return CheckboxListTile(
+                          title: Text("Awaiting data"),
+                          secondary: Icon(Icons.money),
+                          controlAffinity: ListTileControlAffinity.platform,
+                          value: bools[index],
+                          onChanged: (bool value){
+                            setState(() {
+                              bools[index] = value;
+                                                      });
+                          },
+                        );}
+                        }
+                      );
+                    }
+                  ),              
+                  ),
+                ],
+              ), 
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () async {
+                   err = isNumeric(price);
+                   if( err != null || description.length == 0){
+                    ErrorDialog(error: "Nie możesz zostawić pustych pól",context: context).showError();
+                   }else{
+                     await DatabaseService().addExpenses(widget.group.groupid, price, widget.group.ownerid, Uuid().v4(),description);
+                     Navigator.pop(context);
+                   }
+                   },
+                  child: Text("Dodaj koszt",style: TextStyle(color: Colors.black),),
                 ),
-                SizedBox(height: 10,),
-                TextFormField(
-                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',
-                                suffixIcon: Padding(
-                                    padding: EdgeInsets.only(right: 20),
-                                    child: Icon(Icons.money,
-                                        color: MyColors.color2, size: 25.0)),
-                              ),
-                      onChanged: (val) {
-                        setState(() => price = val);
-                      },
+                TextButton(
+                  onPressed: ()=> Navigator.pop(context),
+                  child: Text("Anuluj",style: TextStyle(color: Colors.black),),
                 ),
               ],
-            ), 
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                 err = isNumeric(price);
-                 if( err != null || description.length == 0){
-                  ErrorDialog(error: "Nie możesz zostawić pustych pól",context: context).showError();
-                 }else{
-                   await DatabaseService().addExpenses(widget.group.groupid, price, widget.group.ownerid, Uuid().v4(),description);
-                   Navigator.pop(context);
-                 }
-                 },
-                child: Text("Dodaj koszt",style: TextStyle(color: Colors.black),),
               ),
-              TextButton(
-                onPressed: ()=> Navigator.pop(context),
-                child: Text("Anuluj",style: TextStyle(color: Colors.black),),
-              ),
-            ],
-            );
+         );
+        }
+        );
       }
     );
   }
 
-
+ Future<String> getUsersKey(String uid) async {
+  DocumentSnapshot snapshot = await DatabaseService().userCollection.doc(uid).get();
+  Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  return data['userName']; //you can get any field value you want by writing the exact fieldName in the data[fieldName]
+  }
 
 }
