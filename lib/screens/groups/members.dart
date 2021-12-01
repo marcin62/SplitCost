@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
@@ -9,6 +10,10 @@ import 'package:splitcost/validators/errordialog.dart';
 import 'package:splitcost/validators/validators.dart';
 
 import 'groupdetails.dart';
+
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final User user = auth.currentUser;
+  // final uid = user.uid;
 
 class Members extends StatefulWidget {
 
@@ -60,7 +65,10 @@ class _MembersState extends State<Members> {
                 return StatefulBuilder( builder: (context,setState){
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
-                    if(widget.group.members.contains(document['userId'])){
+                    if(widget.group.members.contains(document['userId'])){//&&uid!=document['userId']){
+                        return FutureBuilder(
+                        future: DatabaseService().getprice(FirebaseAuth.instance.currentUser.uid, widget.group.groupid, document['userId']), // a previously-obtained Future<String> or null
+                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                     return Container(
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.symmetric(vertical: 3 , horizontal: 10),
@@ -69,11 +77,27 @@ class _MembersState extends State<Members> {
                         border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                         borderRadius: BorderRadius.all(Radius.circular(22)),
                       ),
-                      child: Column(children: [
-                        Text((document['userName'])),
-                        Text(document['phoneNumber']),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox( width: 40,),
+                          Container(
+                            width: 110,
+                            child: Text((document['userName']),style: TextStyle(color: MyColors.white,fontSize: 20),),
+                          ),
+                        if(snapshot.hasData)
+                          Container(
+                            width: 110,
+                            child:Text(snapshot.data+ " PLN",style: TextStyle(color: MyColors.white,fontSize: 20),) ,
+                          )
+                        else
+                          Container(
+                            width: 110,
+                            child:Text("0.0 PLN",style: TextStyle(color: MyColors.white,fontSize: 20),) ,
+                          )
                       ],),
                     );
+                        });
                     }
                     else
                     return SizedBox(height: 0,);
@@ -166,9 +190,5 @@ class _MembersState extends State<Members> {
       }
     );
   }
-
-
-
-
 }
 

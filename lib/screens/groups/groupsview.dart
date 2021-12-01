@@ -11,9 +11,9 @@ import 'package:uuid/uuid.dart';
 
 import 'group.dart';
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final User user = auth.currentUser;
-  final uid = user.uid;
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final User user = auth.currentUser;
+  // // final uid = user.uid;
 
 class GroupsView extends StatefulWidget {
   @override

@@ -10,6 +10,10 @@ import 'package:splitcost/validators/errordialog.dart';
 import 'package:splitcost/validators/validators.dart';
 import 'package:uuid/uuid.dart';
 
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final User user = auth.currentUser;
+  // final uid = user.uid;
+
 class Expenses extends StatefulWidget {
   MyGroup group;
   Expenses({this.group});
@@ -65,11 +69,12 @@ class _ExpensesState extends State<Expenses> {
                         border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                         borderRadius: BorderRadius.all(Radius.circular(22)),
                       ),
-                      child: Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(document['description']),
-                          Text(document['expenseid']),
-                          Text(document['price'] + "PLN"),
+                          Text(document['description'],style: TextStyle(color: MyColors.white,fontSize: 20),),
+                          Spacer(),
+                          Text(document['price'] + " PLN",style: TextStyle(color: MyColors.white,fontSize: 20),),
                         ],
                       ),
                     );
@@ -102,7 +107,8 @@ class _ExpensesState extends State<Expenses> {
     showDialog(
       context: context, 
       builder: (BuildContext context){
-        return StatefulBuilder( builder: (context,setState){
+      return SingleChildScrollView(
+        child: StatefulBuilder( builder: (context,setState){
          return Container(
            width: double.maxFinite,
            child: AlertDialog(
@@ -140,7 +146,7 @@ class _ExpensesState extends State<Expenses> {
                   SizedBox(height: 10,),
                   Container(
                     width: 300,
-                    height: 300,
+                    height: 200,
                     child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: widget.group.members.length,
@@ -185,10 +191,17 @@ class _ExpensesState extends State<Expenses> {
                 TextButton(
                   onPressed: () async {
                    err = isNumeric(price);
-                   if( err != null || description.length == 0){
-                    ErrorDialog(error: "Nie możesz zostawić pustych pól",context: context).showError();
-                   }else{
-                     await DatabaseService().addExpenses(widget.group.groupid, price, widget.group.ownerid, Uuid().v4(),description);
+                   if(description.length == 0){
+                    ErrorDialog(error: "Nie podałeś opisu",context: context).showError();
+                   }else if(err!=null){
+                    ErrorDialog(error: err,context: context).showError();
+                   }else if(!bools.contains(true)){
+                    ErrorDialog(error: "Musisz zaznaczyć użytkowników na których chcesz podzielić koszty",context: context).showError();
+                   }
+                   else{
+                     await addexpense(price, bools, widget.group.members, FirebaseAuth.instance.currentUser.uid, widget.group.groupid, description, Uuid().v4());
+                     await DatabaseService().addMessageToUser(FirebaseAuth.instance.currentUser.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()));
+                    //  await DatabaseService().addExpenses(widget.group.groupid, price, widget.group.ownerid, Uuid().v4(),description);
                      Navigator.pop(context);
                    }
                    },
@@ -202,7 +215,7 @@ class _ExpensesState extends State<Expenses> {
               ),
          );
         }
-        );
+        ),);
       }
     );
   }
@@ -212,5 +225,24 @@ class _ExpensesState extends State<Expenses> {
   Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
   return data['userName']; //you can get any field value you want by writing the exact fieldName in the data[fieldName]
   }
+
+Future addexpense(String price, List<bool> bools ,List<dynamic> users, String ownerid,String groupid,String description,String expenseid) async {
+  int divide = 0;
+  for (int i=0;i<bools.length;i++){
+    if(bools[i]==true)
+      divide++;
+  }
+  await DatabaseService().addExpenses(groupid, price, ownerid, expenseid, description);
+  double priceperperson = double.parse(price)/divide;
+
+  for(int i=0;i<users.length;i++)
+  {
+    if(bools[i]==true && users[i]!=ownerid){
+       await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), priceperperson.toString(), users[i], groupid, expenseid);
+       await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ priceperperson.toString(),Timestamp.fromDate(DateTime.now()));
+    }
+  }
+
+}
 
 }
