@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/screens/groups/groupsview.dart';
 import 'package:splitcost/screens/notifications/notifications.dart';
@@ -5,7 +6,6 @@ import 'package:splitcost/screens/users/users.dart';
 import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/style/colors.dart';
 
-import 'drawer.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -25,8 +25,8 @@ class _HomeState extends State<Home> {
 
   Widget _selectScreen(BuildContext context){
     if(_selectedIndex == 0) return GroupsView(); 
-    if(_selectedIndex == 1) return Users();
-    return Notifications();
+    if(_selectedIndex == 1) return Notifications();
+    return Users();
   }
 
   @override
@@ -39,7 +39,6 @@ class _HomeState extends State<Home> {
       backgroundColor: MyColors.color2, 
       elevation: 0.0,
       ),
-      drawer: new DrawerWidget(auth: _auth),
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -52,12 +51,12 @@ class _HomeState extends State<Home> {
             label: 'Grupy',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person,),
-            label: 'Dłużności',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.message,),
             label: 'Wiadomości',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person,),
+            label: 'Konto',
           ),
         ],
         currentIndex: _selectedIndex,

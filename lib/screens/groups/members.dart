@@ -65,7 +65,8 @@ class _MembersState extends State<Members> {
                 return StatefulBuilder( builder: (context,setState){
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
-                    if(widget.group.members.contains(document['userId'])){//&&uid!=document['userId']){
+                    bool test= true;
+                    if(widget.group.members.contains(document['userId'])&&DatabaseService().getUid()!=document['userId']){
                         return FutureBuilder(
                         future: DatabaseService().getprice(FirebaseAuth.instance.currentUser.uid, widget.group.groupid, document['userId']), // a previously-obtained Future<String> or null
                         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

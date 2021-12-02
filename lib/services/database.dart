@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
 
@@ -68,6 +69,10 @@ class DatabaseService {
     QuerySnapshot result = await userCollection.where('phoneNumber', isEqualTo: phone).get();
     List <DocumentSnapshot> documents = result.docs;
     return documents.length;
+  }
+
+  String getUid(){
+    return FirebaseAuth.instance.currentUser.uid;
   }
 
   Future<String> getprice(String uidd,String groupid,String debtid) async {
