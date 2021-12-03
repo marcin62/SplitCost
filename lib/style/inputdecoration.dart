@@ -3,8 +3,8 @@ import 'package:splitcost/style/colors.dart';
 
 abstract class MyDecoration{
   static var textInputDecoration = InputDecoration(
-    hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),
-    fillColor: MyColors.color5,
+    // hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),
+    // fillColor: MyColors.color5,
     filled: true,
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(width: 1, color: MyColors.color2),

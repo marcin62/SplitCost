@@ -56,7 +56,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 SizedBox(height: 20,),
                 TextFormField(
-                   decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email',
+                   decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5,
                             suffixIcon: Padding(
                                 padding: EdgeInsets.only(right: 20),
                                 child: Icon(Icons.person,
@@ -69,7 +69,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło',
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5,
                             suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.lock,

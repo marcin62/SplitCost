@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/screens/groups/groupsview.dart';
 import 'package:splitcost/screens/notifications/notifications.dart';
 import 'package:splitcost/screens/users/users.dart';
-import 'package:splitcost/services/auth.dart';
-import 'package:splitcost/style/colors.dart';
 
 
 class Home extends StatefulWidget{
@@ -14,7 +11,6 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home> {
 
-  final AuthService _auth = AuthService();
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -33,10 +29,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: MyColors.color1,
       appBar: AppBar(
       title: Text('SplitCost'),
-      backgroundColor: MyColors.color2, 
       elevation: 0.0,
       ),
       body: Container(
@@ -60,8 +54,8 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: MyColors.color4,
-        unselectedItemColor: MyColors.white,
+        selectedItemColor: Theme.of(context).secondaryHeaderColor,//MyColors.color4,
+        unselectedItemColor: Theme.of(context).hintColor,
         onTap: _onItemTapped,
     ),
     );

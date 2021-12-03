@@ -31,7 +31,7 @@ class _GroupState extends State<Group> {
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 40),
         decoration: BoxDecoration(
-          color: MyColors.color5.withOpacity(0.50),
+          color: Theme.of(context).hoverColor.withOpacity(0.50),
           border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
           borderRadius: BorderRadius.all(Radius.circular(22)),
         ),
@@ -58,7 +58,6 @@ class _GroupState extends State<Group> {
               Column(
                 children: [
                   Text(widget.groupname, style: TextStyle(color: MyColors.white,fontSize: 25),),
-                  //Text(widget.ownerid, style: TextStyle(color: MyColors.white,fontSize: 15),),
                   Text('Ilość członków: '+widget.members.length.toString(), style: TextStyle(color: MyColors.white,fontSize: 15),),
                 ],
               ),

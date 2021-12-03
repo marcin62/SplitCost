@@ -29,7 +29,7 @@ class _MembersState extends State<Members> {
  Widget build(BuildContext context) {
      return StatefulBuilder( builder: (context,setState){
     return Scaffold(
-      backgroundColor: MyColors.color1,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 40),
@@ -50,7 +50,7 @@ class _MembersState extends State<Members> {
                     border: Border.all(width: 2, color: Colors.white)),
                   ),
                 SizedBox(width: 20,),
-                Text(widget.group.groupName,style: TextStyle(color: MyColors.white,fontSize: 45),)
+                Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
               ],
             ),
             SizedBox(height: 15,),
@@ -65,7 +65,6 @@ class _MembersState extends State<Members> {
                 return StatefulBuilder( builder: (context,setState){
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
-                    bool test= true;
                     if(widget.group.members.contains(document['userId'])&&DatabaseService().getUid()!=document['userId']){
                         return FutureBuilder(
                         future: DatabaseService().getprice(FirebaseAuth.instance.currentUser.uid, widget.group.groupid, document['userId']), // a previously-obtained Future<String> or null
@@ -74,7 +73,7 @@ class _MembersState extends State<Members> {
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.symmetric(vertical: 3 , horizontal: 10),
                       decoration: BoxDecoration(
-                        color: MyColors.color5.withOpacity(0.50),
+                        color:Theme.of(context).hoverColor.withOpacity(0.50),
                         border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                         borderRadius: BorderRadius.all(Radius.circular(22)),
                       ),
@@ -113,9 +112,9 @@ class _MembersState extends State<Members> {
         onPressed: () async {
          _showDialog();
         },
-        splashColor: MyColors.color4,
-        child: Icon(Icons.add,color: MyColors.color1,),
-        backgroundColor: MyColors.color5,
+        splashColor: Theme.of(context).secondaryHeaderColor,
+        child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
+        backgroundColor: Theme.of(context).cardColor,
       ),
     );});
   }
@@ -128,7 +127,7 @@ class _MembersState extends State<Members> {
       builder: (BuildContext context){
         return StatefulBuilder( builder: (context,setState){
          return AlertDialog(
-            backgroundColor: MyColors.color4,
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text("Podaj numer telefonu nowego uczestnika"),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
@@ -138,7 +137,7 @@ class _MembersState extends State<Members> {
                                 suffixIcon: Padding(
                                     padding: EdgeInsets.only(right: 20),
                                     child: Icon(Icons.phone,
-                                        color: MyColors.color2, size: 25.0)),
+                                        color: Theme.of(context).cardColor, size: 25.0)),
                               ),
                       onChanged: (val) {
                         setState(() => phonenumber = val);
@@ -180,11 +179,11 @@ class _MembersState extends State<Members> {
                    }
                  }
                  },
-                child: Text("Dodaj użytkownika",style: TextStyle(color: Colors.black),),
+                child: Text("Dodaj użytkownika",style: TextStyle(color: Theme.of(context).hintColor),),
               ),
               TextButton(
                 onPressed: ()=> Navigator.pop(context),
-                child: Text("Anuluj",style: TextStyle(color: Colors.black),),
+                child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
               ),
             ],
             );});

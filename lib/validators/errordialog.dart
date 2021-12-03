@@ -12,7 +12,7 @@ class ErrorDialog {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: MyColors.color5,
+          backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -20,7 +20,7 @@ class ErrorDialog {
           actions: <Widget>[
             TextButton(
               onPressed: ()=> Navigator.pop(context),
-             child: Text("Ok",style: TextStyle(color: Colors.black),)
+             child: Text("Ok",style: TextStyle(color: Theme.of(context).hintColor),)
              )
           ],
         );

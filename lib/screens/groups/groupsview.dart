@@ -25,7 +25,7 @@ class _GroupsViewState extends State<GroupsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.color1,
+      backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().groupsCollection.orderBy('groupName').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -45,9 +45,9 @@ class _GroupsViewState extends State<GroupsView> {
         onPressed: () async {
          _showDialog();
         },
-        splashColor: MyColors.color4,
-        child: Icon(Icons.add,color: MyColors.color1,),
-        backgroundColor: MyColors.color5,
+        splashColor: Theme.of(context).secondaryHeaderColor,
+        child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
+        backgroundColor: Theme.of(context).cardColor,
       ),
     );
   }
@@ -59,17 +59,17 @@ class _GroupsViewState extends State<GroupsView> {
       context: context, 
       builder: (BuildContext context){
          return AlertDialog(
-            backgroundColor: MyColors.color4,
+            backgroundColor: Theme.of(context).primaryColor,
             title: Text("Podaj nazwę tworzonej grupy"),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
             content: TextFormField(
-                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa grupy',
+                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa grupy',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
                                 suffixIcon: Padding(
                                     padding: EdgeInsets.only(right: 20),
                                     child: Icon(Icons.group,
-                                        color: MyColors.color2, size: 25.0)),
+                                        color: Theme.of(context).cardColor, size: 25.0)),
                               ),
                       onChanged: (val) {
                         setState(() => groupName = val);
@@ -88,11 +88,11 @@ class _GroupsViewState extends State<GroupsView> {
                   Navigator.pop(context);
                  }
                  },
-                child: Text("Stwórz grupe",style: TextStyle(color: Colors.black),),
+                child: Text("Stwórz grupe",style: TextStyle(color: Theme.of(context).hintColor),),
               ),
               TextButton(
                 onPressed: ()=> Navigator.pop(context),
-                child: Text("Anuluj",style: TextStyle(color: Colors.black),),
+                child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
               ),
             ],
             );

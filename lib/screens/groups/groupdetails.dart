@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/expenses.dart';
@@ -35,11 +34,11 @@ class _GroupDetailState extends State<GroupDetail> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: MyColors.color2,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Container(
-        color: MyColors.color1,
+        color: Theme.of(context).primaryColor,
         height: double.infinity,
         width: double.infinity,
         child: _selectScreen(context),
@@ -60,8 +59,8 @@ class _GroupDetailState extends State<GroupDetail> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: MyColors.color4,
-        unselectedItemColor: MyColors.white,
+        selectedItemColor: Theme.of(context).secondaryHeaderColor,//MyColors.color4,
+        unselectedItemColor: Theme.of(context).hintColor,
         onTap: _onItemTapped,
        ),
     );

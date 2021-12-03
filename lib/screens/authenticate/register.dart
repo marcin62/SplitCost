@@ -61,7 +61,7 @@ class _RegisterState extends State<Register> {
                             ),
                 SizedBox(height: 20,),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa użytkownika',
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa użytkownika',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5,
                    suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.person,
@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Numer Telefonu', suffixIcon: Padding(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Numer Telefonu',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5, suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.phone,
                                     color: MyColors.color2, size: 25.0)),),
@@ -84,7 +84,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email', suffixIcon: Padding(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Email', hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5,suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.email,
                                     color: MyColors.color2, size: 25.0)),),
@@ -95,7 +95,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło', suffixIcon: Padding(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Hasło',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5, suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.lock,
                                     color: MyColors.color2, size: 25.0)),),
@@ -107,7 +107,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: 20.0),
                 TextFormField(
-                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Powtórz Hasło', suffixIcon: Padding(
+                  decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Powtórz Hasło',hintStyle: TextStyle(color: MyColors.color2, fontSize: 17),fillColor: MyColors.color5, suffixIcon: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.lock,
                                     color: MyColors.color2, size: 25.0)),),

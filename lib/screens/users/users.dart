@@ -21,7 +21,7 @@ class _UsersState extends State<Users> {
     return Consumer(
       builder: (context,ThemeModel themeNotifier,child){
     return Scaffold(
-      backgroundColor: MyColors.color1,
+      backgroundColor: Theme.of(context).primaryColor,
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(24),
@@ -98,16 +98,4 @@ class _UsersState extends State<Users> {
       color: Colors.pink,
     ),
   );
-
-  Future <SharedPreferences> _prefs = SharedPreferences.getInstance();
-
-  _saveTheme(bool state) async{
-    SharedPreferences pref = await _prefs;
-    pref.setBool('theme', state);
-  }
-  _getTheme() async{
-    _prefs.then((SharedPreferences prefs) {
-    return prefs.getBool('theme') != null ? prefs.getBool('theme') : true;
-    });
-  }
 }

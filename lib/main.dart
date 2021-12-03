@@ -17,6 +17,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -29,9 +30,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: themeNotifier.isDark ? _dark : _light,
         debugShowCheckedModeBanner: false,
-        // theme: new ThemeData(
-        //   canvasColor: MyColors.color2,
-        // ),
         home: Wrapper(),
       ),
     );}
@@ -40,9 +38,25 @@ class MyApp extends StatelessWidget {
 
   ThemeData _dark = ThemeData(
     brightness: Brightness.dark,
+    primaryColor: MyColors.color1,
+    secondaryHeaderColor: MyColors.color4,
+    hintColor: MyColors.white,
+    cardColor: MyColors.color4,
+    accentColor: MyColors.color2,
+    backgroundColor: MyColors.color3,
+    dividerColor: MyColors.color4,
+    hoverColor: MyColors.color5,
   );
 
   ThemeData _light = ThemeData(
     brightness: Brightness.light,
+    primaryColor: MyColors.color4,
+    secondaryHeaderColor: MyColors.color1,
+    hintColor: Colors.black,
+    cardColor: MyColors.color2,
+    accentColor: MyColors.color5,
+    backgroundColor: MyColors.color5,
+    dividerColor: Colors.pink ,
+    hoverColor: MyColors.color2,
   );
 }

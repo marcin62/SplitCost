@@ -25,7 +25,7 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
      return Scaffold(
-       backgroundColor: MyColors.color1,
+       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 40),
@@ -46,7 +46,7 @@ class _ExpensesState extends State<Expenses> {
                     border: Border.all(width: 2, color: Colors.white)),
                   ),
                 SizedBox(width: 20,),
-                Text(widget.group.groupName,style: TextStyle(color: MyColors.white,fontSize: 45),)
+                Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
               ],
         ),
         SizedBox(height: 15,),
@@ -65,7 +65,7 @@ class _ExpensesState extends State<Expenses> {
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.symmetric(vertical: 3 , horizontal: 10),
                       decoration: BoxDecoration(
-                        color: MyColors.color5.withOpacity(0.50),
+                        color: Theme.of(context).hoverColor.withOpacity(0.50),
                         border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                         borderRadius: BorderRadius.all(Radius.circular(22)),
                       ),
@@ -90,9 +90,9 @@ class _ExpensesState extends State<Expenses> {
         onPressed: () async {
          _showDialog();
         },
-        splashColor: MyColors.color4,
-        child: Icon(Icons.add,color: MyColors.color1,),
-        backgroundColor: MyColors.color5,
+        splashColor: Theme.of(context).secondaryHeaderColor,
+        child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
+        backgroundColor: Theme.of(context).cardColor,
       ),
     );
   }
@@ -112,7 +112,7 @@ class _ExpensesState extends State<Expenses> {
          return Container(
            width: double.maxFinite,
            child: AlertDialog(
-              backgroundColor: MyColors.color4,
+              backgroundColor: Theme.of(context).primaryColor,
               title: Text("Podaj Poniesiony Koszt"),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -121,11 +121,11 @@ class _ExpensesState extends State<Expenses> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',
+                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
                                   suffixIcon: Padding(
                                       padding: EdgeInsets.only(right: 20),
                                       child: Icon(Icons.description,
-                                          color: MyColors.color2, size: 25.0)),
+                                          color: Theme.of(context).cardColor, size: 25.0)),
                                 ),
                         onChanged: (val) {
                           setState(() => description = val);
@@ -133,11 +133,11 @@ class _ExpensesState extends State<Expenses> {
                   ),
                   SizedBox(height: 10,),
                   TextFormField(
-                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',
+                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
                                   suffixIcon: Padding(
                                       padding: EdgeInsets.only(right: 20),
                                       child: Icon(Icons.money,
-                                          color: MyColors.color2, size: 25.0)),
+                                          color: Theme.of(context).cardColor, size: 25.0)),
                                 ),
                         onChanged: (val) {
                           setState(() => price = val);
@@ -165,8 +165,8 @@ class _ExpensesState extends State<Expenses> {
                                 bools[index] = value;
                               });
                           },
-                          activeColor: MyColors.color1,
-                          checkColor: MyColors.color4,
+                          activeColor: Theme.of(context).primaryColor,
+                          checkColor: Theme.of(context).secondaryHeaderColor,
                       );}
                         else{
                           return CheckboxListTile(
@@ -201,15 +201,14 @@ class _ExpensesState extends State<Expenses> {
                    else{
                      await addexpense(price, bools, widget.group.members, FirebaseAuth.instance.currentUser.uid, widget.group.groupid, description, Uuid().v4());
                      await DatabaseService().addMessageToUser(FirebaseAuth.instance.currentUser.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()));
-                    //  await DatabaseService().addExpenses(widget.group.groupid, price, widget.group.ownerid, Uuid().v4(),description);
                      Navigator.pop(context);
                    }
                    },
-                  child: Text("Dodaj koszt",style: TextStyle(color: Colors.black),),
+                  child: Text("Dodaj koszt",style: TextStyle(color: Theme.of(context).hintColor),),
                 ),
                 TextButton(
                   onPressed: ()=> Navigator.pop(context),
-                  child: Text("Anuluj",style: TextStyle(color: Colors.black),),
+                  child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
                 ),
               ],
               ),

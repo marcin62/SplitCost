@@ -12,7 +12,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.color1,
+      backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection('messages').orderBy('date',descending: false).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -48,11 +48,11 @@ class MessageTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24,vertical: 8),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [MyColors.color3,MyColors.color4]
+            colors: [Theme.of(context).backgroundColor,Theme.of(context).dividerColor]
           ),
         borderRadius: BorderRadius.only(topLeft:Radius.circular(23),topRight:Radius.circular(23),bottomRight: Radius.circular(23) ),
         ),
-      child: Text(message,style: TextStyle(color: MyColors.white,fontSize: 17),),
+      child: Text(message,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 17),),
       ),
     );
   }
