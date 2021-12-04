@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splitcost/screens/users/accountSettings.dart';
 import 'package:splitcost/screens/users/iconWidget.dart';
 import 'package:splitcost/services/auth.dart';
-import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/theme.dart';
 
 class Users extends StatefulWidget {
@@ -77,6 +76,7 @@ class _UsersState extends State<Users> {
       icon: Icons.person,
       color: Colors.green,
     ),
+    onTap: ()=>_showSettingsPanel(context),
   );
 
   Widget buildCurrency() => DropDownSettingsTile(
@@ -98,4 +98,13 @@ class _UsersState extends State<Users> {
       color: Colors.pink,
     ),
   );
+
+  void _showSettingsPanel(BuildContext context){
+    showModalBottomSheet(context: context,isScrollControlled: true, builder: (context){
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 60),
+        child: SettingsForm(),
+      );
+    });
+  }
 }

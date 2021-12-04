@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:splitcost/models/myUser.dart';
 
 class DatabaseService {
 
@@ -100,39 +101,27 @@ class DatabaseService {
     return price.toString();
 }
 
+ Stream<UserData> get userData {
+   return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+ }
+
+ UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+   return UserData(
+     uid: (snapshot.data() as Map<String,dynamic>)['userId'],
+     name: (snapshot.data() as Map<String,dynamic>)['userName'],
+     email: (snapshot.data() as Map<String,dynamic>)['email'],
+     phone: (snapshot.data() as Map<String,dynamic>)['phoneNumber'],
+   );
+ }
+
+ Future updateUser(String userName, String uidd, String phoneNumber, String email) async {
+    return await userCollection.doc(uidd).set({
+      'userName' : userName,
+      'userId' : uidd,
+      'phoneNumber' : phoneNumber,
+      'email': email,
+    });
+  }
+
+
 }
-
-
-
-
-
-
-
-
-      //  var a = await groupsCollection.doc(groupid).collection('expenses').get().then((querySnapshot)async{
-      //     double price2 = 0;
-      //     querySnapshot.docs.forEach((result) async {
-      //       await DatabaseService().groupsCollection.doc(groupid).collection('expenses').doc(result.id).collection("details").get().then((querySnapshot) {
-      //         querySnapshot.docs.forEach((result) async {
-
-      //           if(result['owner'] == uid)
-      //           {
-      //             if(result['who'] == debtid)
-      //             {
-      //               //print("dodam "+result['howmuch']);
-      //               price2 += double.parse(result['howmuch']);
-      //               //print(price2);
-      //             }
-      //           }else if(result['owner'] == debtid){
-      //             if(result['who'] == uid)
-      //             {
-      //               price2 -= double.parse(result['howmuch']);
-      //              // print("odejme 10");
-      //             }
-      //           }
-      //         }) ;print(price2);
-      //       });
-      //     });
-      //     // print(price2);
-      //      return price2.toString();
-      //   });
