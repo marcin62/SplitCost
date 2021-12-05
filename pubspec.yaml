@@ -36,6 +36,7 @@ dependencies:
   uuid: ^3.0.5
   flutter_settings_screens: 0.2.2+1
   shared_preferences: ^2.0.5
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/screens/users/accountSettings.dart';
 import 'package:splitcost/screens/users/iconWidget.dart';
+import 'package:splitcost/screens/users/removeAccount.dart';
 import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/style/theme.dart';
 
@@ -97,6 +98,7 @@ class _UsersState extends State<Users> {
       icon: Icons.delete,
       color: Colors.pink,
     ),
+    onTap: ()=>_removeAccount(context),
   );
 
   void _showSettingsPanel(BuildContext context){
@@ -107,4 +109,14 @@ class _UsersState extends State<Users> {
       );
     });
   }
+
+  void _removeAccount(BuildContext context){
+      showDialog(
+      context: context, 
+      builder: (BuildContext context){
+         return RemoveAccount();
+      }
+    );
+  }
+
 }

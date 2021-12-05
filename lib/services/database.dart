@@ -123,5 +123,47 @@ class DatabaseService {
     });
   }
 
+ Future deleteUserdata(String userid) async {
+
+   userCollection.doc(userid).delete();
+   groupsCollection.where('ownerId',isEqualTo: userid).get().then((value) => {
+     for(DocumentSnapshot ds in value.docs){
+       ds.reference.delete()
+     }
+   });
+
+   groupsCollection.get().then((group) =>{
+     for(DocumentSnapshot ds in group.docs){
+       ds.reference.collection('expenses').where('ownerid',isEqualTo: userid).get().then((expenses) =>{
+         for(DocumentSnapshot ws in expenses.docs){
+           ws.reference.delete()
+         }
+       })
+     }
+   });
+
+   groupsCollection.get().then((group) =>{
+     for(DocumentSnapshot ds in group.docs){
+       ds.reference.collection('expenses').get().then((expenses) =>{
+         for(DocumentSnapshot ws in expenses.docs){
+           ws.reference.collection('details').where('who',isEqualTo: userid).get().then((value) =>{
+             for(DocumentSnapshot ks in value.docs){
+               ks.reference.delete()
+             }
+           })
+         }
+       })
+     }
+   });
+   
+   QuerySnapshot expensequery = await groupsCollection.where('members',arrayContains: userid).get();
+   for (int i = 0 ;i <expensequery.docs.length;i++){
+     DocumentSnapshot doc = await expensequery.docs.elementAt(i).reference.get();
+     List list = (doc.data() as Map<String,dynamic>)['members'];
+     String groupid = (doc.data() as Map<String,dynamic>)['groupId'];
+     list.remove(userid);
+     await updateMembersOfGroup(list, groupid);
+   }
+ }
 
 }
