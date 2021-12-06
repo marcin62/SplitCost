@@ -24,7 +24,7 @@ class RemoveAccount extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () async {await deleteUser(user.uid,context);},
+          onPressed: () async {deleteUser(user.uid,context);},
           child: Text("Usuń konto",style: TextStyle(color: Theme.of(context).hintColor),),
         ),
         TextButton(

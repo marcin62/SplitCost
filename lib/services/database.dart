@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:splitcost/models/myUser.dart';
+import 'package:splitcost/screens/groups/group.dart';
 
 class DatabaseService {
 
@@ -100,6 +101,16 @@ class DatabaseService {
     }
     return price.toString();
 }
+ Future<String> getUserName(){
+   return (userCollection.doc(uid).snapshots() as Map<String,dynamic>)['userName'];
+ }
+
+ Future<String> getUsersKey(String uid) async {
+  DocumentSnapshot snapshot = await DatabaseService().userCollection.doc(uid).get();
+  Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  return data['userName']; 
+  }
+
 
  Stream<UserData> get userData {
    return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
@@ -166,4 +177,36 @@ class DatabaseService {
    }
  }
 
+  Future deleteDebt(payer, debt,groupid)async{
+    await groupsCollection.doc(groupid).get().then((value) => 
+    {
+      value.reference.collection('expenses').where('ownerid',isEqualTo: payer).get().then((expenses) =>{
+        for(DocumentSnapshot doc in expenses.docs)
+        {
+          doc.reference.collection('details').where('who',isEqualTo: debt).get().then((details) async => {
+            for(DocumentSnapshot doc2 in details.docs)
+            {
+              doc2.reference.delete(),
+            }
+          }),
+        }
+      })
+    });
+  }
+  Future deleteDebt2(payer, debt,groupid)async{
+    await groupsCollection.doc(groupid).get().then((value) => 
+    {
+      value.reference.collection('expenses').where('ownerid',isEqualTo: debt).get().then((expenses) =>{
+        for(DocumentSnapshot doc in expenses.docs)
+        {
+          doc.reference.collection('details').where('who',isEqualTo: payer).get().then((details) async => {
+            for(DocumentSnapshot doc2 in details.docs)
+            {
+              doc2.reference.delete(),
+            }
+          }),
+        }
+      })
+    });
+  }
 }

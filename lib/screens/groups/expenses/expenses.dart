@@ -28,7 +28,7 @@ class _ExpensesState extends State<Expenses> {
        backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 40),
+        margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
       children: [
         Row(

@@ -34,4 +34,15 @@ abstract class MyDecoration{
         style: BorderStyle.solid),
         borderRadius:BorderRadius.circular(45.0))),
   );
+
+   static var remindbuttonStyle = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(MyColors.color3.withOpacity(0.5)),
+    minimumSize: MaterialStateProperty.all(Size(50, 50)),
+    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+      side: BorderSide(
+        color: Colors.white,
+        width: 1,
+        style: BorderStyle.solid),
+        borderRadius:BorderRadius.circular(90.0))),
+  );
 }
