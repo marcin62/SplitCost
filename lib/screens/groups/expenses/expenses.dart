@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
+import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
+import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -10,9 +12,6 @@ import 'package:splitcost/validators/errordialog.dart';
 import 'package:splitcost/validators/validators.dart';
 import 'package:uuid/uuid.dart';
 
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-  // final User user = auth.currentUser;
-  // final uid = user.uid;
 
 class Expenses extends StatefulWidget {
   MyGroup group;
@@ -99,113 +98,54 @@ class _ExpensesState extends State<Expenses> {
 
 
   void _showDialog(){
-    List<bool> bools = new List<bool>.filled(widget.group.members.length, false);
-    bool check = true;
-    String price = "";
-    String description = "";
-    String err;
     showDialog(
       context: context, 
       builder: (BuildContext context){
-      return SingleChildScrollView(
-        child: StatefulBuilder( builder: (context,setState){
+        return StatefulBuilder( builder: (context,setState){
          return Container(
            width: double.maxFinite,
            child: AlertDialog(
               backgroundColor: Theme.of(context).primaryColor,
-              title: Text("Podaj Poniesiony Koszt"),
+              title: Text("Wybierz rodzaj podziału kosztu"),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
-                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
-                                  suffixIcon: Padding(
-                                      padding: EdgeInsets.only(right: 20),
-                                      child: Icon(Icons.description,
-                                          color: Theme.of(context).cardColor, size: 25.0)),
-                                ),
-                        onChanged: (val) {
-                          setState(() => description = val);
-                        },
+                  ElevatedButton(
+                     style: MyDecoration.mybuttonStyle,
+                    onPressed: () async {Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplitEquelly(group: widget.group,),),
+                    );
+                    },
+                    child: Text("Podziel porówno")
                   ),
                   SizedBox(height: 10,),
-                  TextFormField(
-                         decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
-                                  suffixIcon: Padding(
-                                      padding: EdgeInsets.only(right: 20),
-                                      child: Icon(Icons.money,
-                                          color: Theme.of(context).cardColor, size: 25.0)),
-                                ),
-                        onChanged: (val) {
-                          setState(() => price = val);
-                        },
+                  ElevatedButton(
+                    style: MyDecoration.mybuttonStyle,
+                    onPressed: () async {Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplitPercent(group: widget.group,),),
+                    );
+                    },
+                    child: Text("Podziel procentowo")
                   ),
                   SizedBox(height: 10,),
-                  Container(
-                    width: 300,
-                    height: 200,
-                    child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.group.members.length,
-                    itemBuilder: (context, index){
-                      return FutureBuilder(
-                        future: getUsersKey(widget.group.members[index]?? null), // a previously-obtained Future<String> or null
-                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                        if(snapshot.hasData){
-                          return CheckboxListTile(
-                            title: Text(snapshot.data),
-                            secondary: Icon(Icons.money),
-                            controlAffinity: ListTileControlAffinity.platform,
-                            value: bools[index],
-                            onChanged: (bool value){
-                              setState(() {
-                                bools[index] = value;
-                              });
-                          },
-                          activeColor: Theme.of(context).primaryColor,
-                          checkColor: Theme.of(context).secondaryHeaderColor,
-                      );}
-                        else{
-                          return CheckboxListTile(
-                          title: Text("Awaiting data"),
-                          secondary: Icon(Icons.money),
-                          controlAffinity: ListTileControlAffinity.platform,
-                          value: bools[index],
-                          onChanged: (bool value){
-                            setState(() {
-                              bools[index] = value;
-                                                      });
-                          },
-                        );}
-                        }
-                      );
-                    }
-                  ),              
+                  ElevatedButton(
+                    style: MyDecoration.mybuttonStyle,
+                    onPressed: () async {
+                    //   Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => SplitPercent(group: widget.group,),),
+                    // );
+                    },
+                    child: Text("Podziel cenowo")
                   ),
                 ],
               ), 
               actions: <Widget>[
-                TextButton(
-                  onPressed: () async {
-                   err = isNumeric(price);
-                   if(description.length == 0){
-                    ErrorDialog(error: "Nie podałeś opisu",context: context).showError();
-                   }else if(err!=null){
-                    ErrorDialog(error: err,context: context).showError();
-                   }else if(!bools.contains(true)){
-                    ErrorDialog(error: "Musisz zaznaczyć użytkowników na których chcesz podzielić koszty",context: context).showError();
-                   }
-                   else{
-                     await addexpense(price, bools, widget.group.members, FirebaseAuth.instance.currentUser.uid, widget.group.groupid, description, Uuid().v4());
-                     await DatabaseService().addMessageToUser(FirebaseAuth.instance.currentUser.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()));
-                     Navigator.pop(context);
-                   }
-                   },
-                  child: Text("Dodaj koszt",style: TextStyle(color: Theme.of(context).hintColor),),
-                ),
                 TextButton(
                   onPressed: ()=> Navigator.pop(context),
                   child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
@@ -214,34 +154,9 @@ class _ExpensesState extends State<Expenses> {
               ),
          );
         }
-        ),);
+        );
       }
     );
   }
-
- Future<String> getUsersKey(String uid) async {
-  DocumentSnapshot snapshot = await DatabaseService().userCollection.doc(uid).get();
-  Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-  return data['userName']; //you can get any field value you want by writing the exact fieldName in the data[fieldName]
-  }
-
-Future addexpense(String price, List<bool> bools ,List<dynamic> users, String ownerid,String groupid,String description,String expenseid) async {
-  int divide = 0;
-  for (int i=0;i<bools.length;i++){
-    if(bools[i]==true)
-      divide++;
-  }
-  await DatabaseService().addExpenses(groupid, price, ownerid, expenseid, description);
-  double priceperperson = double.parse(price)/divide;
-
-  for(int i=0;i<users.length;i++)
-  {
-    if(bools[i]==true && users[i]!=ownerid){
-       await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), priceperperson.toString(), users[i], groupid, expenseid);
-       await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ priceperperson.toString(),Timestamp.fromDate(DateTime.now()));
-    }
-  }
-
-}
 
 }
