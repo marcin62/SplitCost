@@ -12,7 +12,7 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      //backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection('messages').orderBy('date',descending: false).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot){

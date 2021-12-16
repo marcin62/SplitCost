@@ -120,7 +120,7 @@ class _SplitEquellyState extends State<SplitEquelly> {
   }
 
   Widget _buildDescription() => TextFormField(
-    decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
+    decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Krótki opis',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
       suffixIcon: Padding(
         padding: EdgeInsets.only(right: 20),
         child: Icon(Icons.description,color: Theme.of(context).cardColor, size: 25.0)),
@@ -131,7 +131,7 @@ class _SplitEquellyState extends State<SplitEquelly> {
   );
 
   Widget _buildPrice() => TextFormField(
-    decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
+    decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Koszt',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
       suffixIcon: Padding(
         padding: EdgeInsets.only(right: 20),
         child: Icon(Icons.money,color: Theme.of(context).cardColor, size: 25.0)),

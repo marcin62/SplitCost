@@ -7,7 +7,7 @@ import 'package:splitcost/style/inputdecoration.dart';
 import 'package:splitcost/validators/errordialog.dart';
 import 'package:splitcost/validators/validators.dart';
 
-import 'groupdetails.dart';
+import '../groupdetails.dart';
 
 class AddMember extends StatelessWidget {
   String phonenumber="";

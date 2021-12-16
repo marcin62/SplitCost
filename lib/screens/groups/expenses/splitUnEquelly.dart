@@ -9,25 +9,25 @@ import 'package:splitcost/validators/errordialog.dart';
 import 'package:splitcost/validators/validators.dart';
 import 'package:uuid/uuid.dart';
 
-class SplitPercent extends StatefulWidget {
+class SplitUnEquelly extends StatefulWidget {
 
   MyGroup group;
-  SplitPercent({this.group});
+  SplitUnEquelly({this.group});
   
   @override
-  _SplitPercentState createState() => _SplitPercentState();
+  _SplitUnEquellyState createState() => _SplitUnEquellyState();
 }
 
-class _SplitPercentState extends State<SplitPercent> {
+class _SplitUnEquellyState extends State<SplitUnEquelly> {
   
-  String price = "";
+  double price = 0;
   String description = "";
   String err;
 
   @override
   Widget build(BuildContext context) {
     
-    List<int> percents = new List<int>.filled(widget.group.members.length, 0);
+    List<double> prices = new List<double>.filled(widget.group.members.length, 0);
     final user = Provider.of<MyUser>(context);
 
     return Scaffold(
@@ -41,7 +41,7 @@ class _SplitPercentState extends State<SplitPercent> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 50,),
-                Text("Rozdziel koszty procentowo",style: TextStyle(fontSize: 30,),textAlign: TextAlign.center),
+                Text("Rozdziel koszty nierówno",style: TextStyle(fontSize: 30,),textAlign: TextAlign.center),
                 SizedBox(height: 20,),
                 _buildDescription(),
                 SizedBox(height: 20,),
@@ -65,16 +65,16 @@ class _SplitPercentState extends State<SplitPercent> {
                                 Text(snapshot.data,style: TextStyle(fontSize: 20),),
                                 Spacer(),
                                  Container( 
-                                    width: 115,
+                                    width: 125,
                                   child: TextFormField(
-                                    decoration: MyDecoration.textInputDecoration.copyWith(hintText: '0%',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
+                                    decoration: MyDecoration.textInputDecoration.copyWith(hintText: '0 PLN',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
                                       suffixIcon: Padding(
                                         padding: EdgeInsets.only(right: 20),
-                                        child: Icon(Icons.calculate_outlined,color: Theme.of(context).cardColor, size: 25.0)),
+                                        child: Icon(Icons.money,color: Theme.of(context).cardColor, size: 25.0)),
                                         ),
                                     onChanged: (val) {
                                       if(isNumeric(val)==null)
-                                      setState(() => percents[index] = int.parse(val));
+                                      setState(() => prices[index] = double.parse(val));
                                     },
                                   ),),
                                // ),
@@ -95,14 +95,14 @@ class _SplitPercentState extends State<SplitPercent> {
                                   child: Container( 
                                     width: 200,
                                   child: TextFormField(
-                                    decoration: MyDecoration.textInputDecoration.copyWith(hintText: '0%',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
+                                    decoration: MyDecoration.textInputDecoration.copyWith(hintText: '0 PLN',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
                                       suffixIcon: Padding(
                                         padding: EdgeInsets.only(right: 20),
-                                        child: Icon(Icons.calculate_outlined,color: Theme.of(context).cardColor, size: 25.0)),
+                                        child: Icon(Icons.money,color: Theme.of(context).cardColor, size: 25.0)),
                                         ),
                                     onChanged: (val) {
                                       if(isNumeric(val)==null)
-                                      setState(() => percents[index] = int.parse(val));
+                                      setState(() => prices[index] = double.parse(val));
                                     },
                                   ),),
                                 ),
@@ -117,7 +117,7 @@ class _SplitPercentState extends State<SplitPercent> {
                   }
                 ),              
               ),
-             Text("Do rozdania: " + (100-percents.fold(0, (a, b) => a+b)).toString()+"%",style: TextStyle(fontSize: 17),),
+             Text("Do rozdania: " + (price-prices.fold(0, (a, b) => a+b)).toString()+" PLN",style: TextStyle(fontSize: 17),),
             ],
           ),
         ), 
@@ -126,16 +126,16 @@ class _SplitPercentState extends State<SplitPercent> {
     ),
     floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          err = isNumeric(price);
+          err = isNumeric(price.toString());
           if(description.length == 0){
             ErrorDialog(error: "Nie podałeś opisu",context: context).showError();
           }else if(err!=null){
             ErrorDialog(error: err,context: context).showError();
-          }else if(100-percents.fold(0, (a, b) => a+b)!=0){
-            ErrorDialog(error: "Muisz rozdać 100% kosztów",context: context).showError();
+          }else if(price-prices.fold(0, (a, b) => a+b)!=0){
+            ErrorDialog(error: "Muisz rozdać wszystkie koszty kosztów",context: context).showError();
           }else{
-            await addPercentExpense(price, percents, widget.group.members, user.uid, widget.group.groupid, description, Uuid().v4());
-            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()));
+            await addUnEquellyExpense(price.toString(), prices, widget.group.members, user.uid, widget.group.groupid, description, Uuid().v4());
+            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price.toString(),Timestamp.fromDate(DateTime.now()));
             Navigator.pop(context);
             Navigator.pop(context);
           }
@@ -165,17 +165,17 @@ class _SplitPercentState extends State<SplitPercent> {
         child: Icon(Icons.money,color: Theme.of(context).cardColor, size: 25.0)),
         ),
     onChanged: (val) {
-      setState(() => price = val);
+      setState(() => price = double.parse(val));
     },
   );
 
-  Future addPercentExpense(String price, List<int> percent ,List<dynamic> users, String ownerid,String groupid,String description,String expenseid) async {
+  Future addUnEquellyExpense(String price, List<double> percent ,List<dynamic> users, String ownerid,String groupid,String description,String expenseid) async {
     await DatabaseService().addExpenses(groupid, price, ownerid, expenseid, description);
     double pricedouble = double.parse(price);
     for(int i=0;i<users.length;i++)
     {
       if(percent[i]!=0 && users[i]!=ownerid){
-        double howmany = percent[i]/100*pricedouble;
+        double howmany = percent[i];
         await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toString(), users[i], groupid, expenseid);
         await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ howmany.toString(),Timestamp.fromDate(DateTime.now()));
       }

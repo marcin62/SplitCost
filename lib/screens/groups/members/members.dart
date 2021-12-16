@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
-import 'package:splitcost/screens/groups/addNewMember.dart';
+import 'package:splitcost/screens/groups/members/addNewMember.dart';
 import 'package:splitcost/screens/groups/group.dart';
-import 'package:splitcost/screens/groups/paydebt.dart';
+import 'package:splitcost/screens/groups/members/paydebt.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
+import 'package:splitcost/validators/errordialog.dart';
 
 class Members extends StatefulWidget {
 
@@ -28,7 +29,7 @@ class _MembersState extends State<Members> {
 
      return StatefulBuilder( builder: (context,setState){
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      //backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
@@ -110,7 +111,7 @@ class _MembersState extends State<Members> {
   );
 
   Widget _buildRows(String text) => Container(
-     child: Text(text,style: TextStyle(color: MyColors.white,fontSize: 20),),
+     child: Text(text,style: TextStyle(fontSize: 20),),
   );
 
   Widget _buildRemindButton(String userid,String owner,String groupname,String price) => ElevatedButton(
@@ -118,6 +119,7 @@ class _MembersState extends State<Members> {
     child: Icon(Icons.info,color: Colors.red,),
     onPressed:() async {
       String username = await DatabaseService().getUsersKey(owner);
+      ErrorDialog(error: 'Właśnie wysłałeś przypomnienie o spłacie długu',context: context).showError();
       DatabaseService().addMessageToUser(userid, "Użytkownik " + username + " prosi o uregulowanie dłużności w grupie " + groupname +" na kwotę " +price +".", Timestamp.fromDate(DateTime.now()));
     }
   );
@@ -149,7 +151,10 @@ class _MembersState extends State<Members> {
         else if(double.parse(snapshot.data) <0)
           _buildPayButton(userId, ownerid, widget.group.groupName,snapshot.data)
         else
-          Icon(Icons.face,color: Colors.greenAccent,)
+          Container(
+            padding: EdgeInsets.only(right: 3),
+            child: Icon(Icons.face,color: Colors.greenAccent,size: 50,)
+          )
         ],
     ),
   );

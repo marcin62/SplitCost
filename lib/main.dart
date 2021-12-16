@@ -42,10 +42,16 @@ class MyApp extends StatelessWidget {
     secondaryHeaderColor: MyColors.color4,
     hintColor: MyColors.white,
     cardColor: MyColors.color4,
-    accentColor: MyColors.color2,
+    accentColor: MyColors.white, //color2 //do ustawien
     backgroundColor: MyColors.color3,
     dividerColor: MyColors.color4,
     hoverColor: MyColors.color5,
+    textTheme: const TextTheme(
+      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold,color: Colors.white),
+      // headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic,color: Colors.white),
+      // bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',color: Colors.white),
+    ),
+    buttonColor: MyColors.color2,
   );
 
   ThemeData _light = ThemeData(
@@ -54,9 +60,10 @@ class MyApp extends StatelessWidget {
     secondaryHeaderColor: MyColors.color1,
     hintColor: Colors.black,
     cardColor: MyColors.color2,
-    accentColor: MyColors.color5,
+    accentColor:  Colors.black,//MyColors.color5, //color5  //do usawien
     backgroundColor: MyColors.color5,
     dividerColor: Colors.pink ,
     hoverColor: MyColors.color2,
+    buttonColor: MyColors.color5,
   );
 }

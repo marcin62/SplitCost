@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:splitcost/screens/groups/members.dart';
+import 'package:splitcost/screens/groups/members/members.dart';
 import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
@@ -10,10 +10,6 @@ import 'package:splitcost/validators/errordialog.dart';
 import 'package:uuid/uuid.dart';
 
 import 'group.dart';
-
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-  // final User user = auth.currentUser;
-  // // final uid = user.uid;
 
 class GroupsView extends StatefulWidget {
   @override
@@ -25,7 +21,7 @@ class _GroupsViewState extends State<GroupsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      //backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().groupsCollection.orderBy('groupName').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -65,7 +61,7 @@ class _GroupsViewState extends State<GroupsView> {
               borderRadius: BorderRadius.circular(30),
             ),
             content: TextFormField(
-                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa grupy',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
+                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: 'Nazwa grupy',hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
                                 suffixIcon: Padding(
                                     padding: EdgeInsets.only(right: 20),
                                     child: Icon(Icons.group,

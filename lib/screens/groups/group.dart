@@ -62,17 +62,7 @@ class _GroupState extends State<Group> {
                 ],
               ),
               SizedBox( width: 20,),
-              // GestureDetector(
-              //   onTap: () async {
-              //     if(widget.ownerid == uid)
-              //     {
-              //         await DatabaseService().groupsCollection.doc(widget.groupid).delete();
-              //     }else {
-              //         ErrorDialog(error:"Tylko właściciel może usnunąć grupę",context: context).showError();
-              //     }
-              //   },
-              //   child :Icon(Icons.delete, color: MyColors.red, size: 40,)),
-                 SizedBox(height: 10,),
+              SizedBox(height: 10,),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -80,7 +70,7 @@ class _GroupState extends State<Group> {
                     MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid,members: widget.members))),
                   ).then((value) => setState(()=>{}));
                 },
-                child: Icon(Icons.info, color: MyColors.red, size: 40,) ,
+                child: Icon(Icons.arrow_forward_rounded, color: Colors.greenAccent, size: 40,) ,
               )
               ],), 
                SizedBox(height: 10,),

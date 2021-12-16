@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
 import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
+import 'package:splitcost/screens/groups/expenses/splitUnEquelly.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -24,30 +25,13 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
      return Scaffold(
-       backgroundColor: Theme.of(context).primaryColor,
+       //backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
       children: [
-        Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 90,
-                  height: 90,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/logo.jpg'),
-                      fit: BoxFit.fill,
-                    ),
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.white)),
-                  ),
-                SizedBox(width: 20,),
-                Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
-              ],
-        ),
+        _buildImage(),
         SizedBox(height: 15,),
         Expanded( child:
         StreamBuilder<QuerySnapshot>(
@@ -71,9 +55,9 @@ class _ExpensesState extends State<Expenses> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(document['description'],style: TextStyle(color: MyColors.white,fontSize: 20),),
+                          Text(document['description'],style: TextStyle(fontSize: 20),),
                           Spacer(),
-                          Text(document['price'] + " PLN",style: TextStyle(color: MyColors.white,fontSize: 20),),
+                          Text(document['price'] + " PLN",style: TextStyle(fontSize: 20),),
                         ],
                       ),
                     );
@@ -135,11 +119,10 @@ class _ExpensesState extends State<Expenses> {
                   SizedBox(height: 10,),
                   ElevatedButton(
                     style: MyDecoration.mybuttonStyle,
-                    onPressed: () async {
-                    //   Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => SplitPercent(group: widget.group,),),
-                    // );
+                    onPressed: () async {Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplitUnEquelly(group: widget.group,),),
+                    );
                     },
                     child: Text("Podziel cenowo")
                   ),
@@ -158,5 +141,25 @@ class _ExpensesState extends State<Expenses> {
       }
     );
   }
+
+  Widget _buildImage() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/logo.jpg'),
+            fit: BoxFit.fill,
+          ),
+          shape: BoxShape.circle,
+          border: Border.all(width: 2, color: Colors.white)),
+      ),
+      SizedBox(width: 20,),
+      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+    ],
+  );
+
 
 }

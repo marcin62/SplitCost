@@ -57,7 +57,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
   Widget buildNameField(String data, String notdata,Icon icon,String manual) => TextFormField(
     initialValue: data ?? notdata,
-    decoration: MyDecoration.textInputDecoration.copyWith(hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,
+    decoration: MyDecoration.textInputDecoration.copyWith(hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).backgroundColor,
     suffixIcon: Padding(
       padding: EdgeInsets.only(right: 20),
       child: icon),
@@ -68,7 +68,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
   Widget buildPhoneField(String data, String notdata,Icon icon) => TextFormField(
     initialValue: data ?? notdata,
-    decoration: MyDecoration.textInputDecoration.copyWith(hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).accentColor,    
+    decoration: MyDecoration.textInputDecoration.copyWith(hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).backgroundColor,    
     suffixIcon: Padding(
       padding: EdgeInsets.only(right: 20),
       child: icon),

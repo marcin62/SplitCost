@@ -21,7 +21,7 @@ class _UsersState extends State<Users> {
     return Consumer(
       builder: (context,ThemeModel themeNotifier,child){
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+     // backgroundColor: Theme.of(context).primaryColor,
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(24),

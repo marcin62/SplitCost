@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/services/database.dart';
 
-import 'groupdetails.dart';
+import '../groupdetails.dart';
 
 class PayDebt extends StatelessWidget {
   String owner="";
