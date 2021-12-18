@@ -3,7 +3,6 @@ import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/expenses.dart';
 import 'package:splitcost/screens/groups/members/members.dart';
 import 'package:splitcost/screens/groups/settings/settings.dart';
-import 'package:splitcost/style/colors.dart';
 
 class GroupDetail extends StatefulWidget {
   MyGroup group;
@@ -33,13 +32,7 @@ class _GroupDetailState extends State<GroupDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).primaryColor,
-      //   //backgroundColor: Theme.of(context).primaryColor,
-      //   elevation: 0.0,
-      // ),
       body: Container(
-        //color: Theme.of(context).primaryColor,
         padding: EdgeInsets.only(top: 50),
         height: double.infinity,
         width: double.infinity,

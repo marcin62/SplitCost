@@ -1,25 +1,35 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
+import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/screens/groups/settings/usersmanagement.dart';
 import 'package:splitcost/style/inputdecoration.dart';
+import 'package:splitcost/validators/errordialog.dart';
 
 class SettingsView extends StatefulWidget {
   MyGroup group;
-
+  File file;
   SettingsView({this.group});
   @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<SettingsView> {
+  
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
           children: [
+            //Expanded(child:img),
             _buildImage(),
             SizedBox(height: 20,),
             Text("Usuń członków",style: TextStyle(fontSize: 20),),
@@ -45,17 +55,39 @@ class _SettingsState extends State<SettingsView> {
   Widget _buildImage() => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/logo.jpg'),
-            fit: BoxFit.fill,
-          ),
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white)),
-      ),
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 90,
+            width: 90,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/logo.jpg'),
+            ),
+          );
+        }
+      }),
       SizedBox(width: 20,),
       Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
@@ -72,7 +104,9 @@ class _SettingsState extends State<SettingsView> {
         SizedBox(width: 30,)
       ],
     ),
-    onPressed:() async {}
+    onPressed:() async {
+      await uploadFile();
+    }
   );
 
   Widget _buildRemoveGroupButton(String groupid) => ElevatedButton(
@@ -88,5 +122,15 @@ class _SettingsState extends State<SettingsView> {
     ),
     onPressed:() async {}
   );
+
+  Future uploadFile() async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final path = result.files.single.path;
+    setState(() {
+    widget.file = File(path);
+    });
+    final destination ="${widget.group.groupid}";
+    FirebaseApi.uploadFile(destination, widget.file);
+  }
 
 }

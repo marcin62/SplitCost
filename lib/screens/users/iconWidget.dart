@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:splitcost/style/colors.dart';
-
 
 class IconWidget extends StatelessWidget {
   

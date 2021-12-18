@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
-import 'package:splitcost/screens/groups/settings/settings.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
 import 'package:splitcost/validators/errordialog.dart';
+
+import 'firebaseApi.dart';
 
 class UsersManagement extends StatefulWidget {
 
@@ -52,7 +53,9 @@ class _UsersManagementState extends State<UsersManagement> {
                     children: [
                       Row(
                         children: [
-                          SizedBox(width: 10),
+                          SizedBox(width: 20),
+                          _avatar(document['userId']),
+                          SizedBox(width: 30,),
                           Text(
                             document['userName'],
                             style: TextStyle( fontSize: 20),
@@ -121,4 +124,44 @@ class _UsersManagementState extends State<UsersManagement> {
       }
     );
   }
+
+      Widget _avatar(String uid) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext(uid), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 40,
+            width: 40,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 40,
+            height: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 40,
+            height: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/avatar.jpg'),
+            ),
+          );
+        }
+      }),
+    ],
+  );
+  
 }

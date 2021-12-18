@@ -1,15 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
-import 'package:splitcost/services/database.dart';
+import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/style/colors.dart';
-import 'package:splitcost/validators/errordialog.dart';
 
 import 'groupdetails.dart';
-
- final FirebaseAuth auth = FirebaseAuth.instance;
-  final User user = auth.currentUser;
-  final uid = user.uid;
 
 class Group extends StatefulWidget {
   final String groupname;
@@ -42,18 +36,19 @@ class _GroupState extends State<Group> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
-              Container(
-                height: 80.0,
-                width: 80.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/logo.jpg'),
-                    fit: BoxFit.fill,
-                  ),
-                shape: BoxShape.circle,
-                border: Border.all(width: 2, color: Colors.white)),
-                padding: EdgeInsets. symmetric(vertical: 10.0, horizontal: 5.0)
-              ),
+                _buildImage(),
+              // Container(
+              //   height: 80.0,
+              //   width: 80.0,
+              //   decoration: BoxDecoration(
+              //     image: DecorationImage(
+              //       image: AssetImage('assets/images/logo.jpg'),
+              //       fit: BoxFit.fill,
+              //     ),
+              //   shape: BoxShape.circle,
+              //   border: Border.all(width: 2, color: Colors.white)),
+              //   padding: EdgeInsets. symmetric(vertical: 10.0, horizontal: 5.0)
+              // ),
               SizedBox( width: 20,),
               Column(
                 children: [
@@ -79,4 +74,44 @@ class _GroupState extends State<Group> {
       ),
     );
   }
+
+  Widget _buildImage() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext("${widget.groupid}"), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 80,
+            width: 80,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 80,
+            height: 80,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 80,
+            height: 80,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/logo.jpg'),
+            ),
+          );
+        }
+      }),
+      SizedBox(width: 20,),
+    ],
+  );
 }

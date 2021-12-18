@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/services/database.dart';
-import 'package:splitcost/style/colors.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection('messages').orderBy('date',descending: false).snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot){

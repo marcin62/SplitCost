@@ -1,17 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
 import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
 import 'package:splitcost/screens/groups/expenses/splitUnEquelly.dart';
+import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
-import 'package:splitcost/validators/errordialog.dart';
-import 'package:splitcost/validators/validators.dart';
-import 'package:uuid/uuid.dart';
 
 
 class Expenses extends StatefulWidget {
@@ -142,7 +138,7 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
-  Widget _buildImage() => Row(
+  Widget _buildImage2() => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Container(
@@ -156,6 +152,47 @@ class _ExpensesState extends State<Expenses> {
           shape: BoxShape.circle,
           border: Border.all(width: 2, color: Colors.white)),
       ),
+      SizedBox(width: 20,),
+      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+    ],
+  );
+
+    Widget _buildImage() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 90,
+            width: 90,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData&& snapshot.data.toString()!=""){
+          return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/logo.jpg'),
+            ),
+          );
+        }
+      }),
       SizedBox(width: 20,),
       Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],

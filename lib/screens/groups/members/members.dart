@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
 import 'package:splitcost/screens/groups/members/addNewMember.dart';
-import 'package:splitcost/screens/groups/group.dart';
 import 'package:splitcost/screens/groups/members/paydebt.dart';
+import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -29,13 +29,12 @@ class _MembersState extends State<Members> {
 
      return StatefulBuilder( builder: (context,setState){
     return Scaffold(
-      //backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
           children: [
-            _buildImageWithName(widget.group.groupName),
+            _buildImage(),
             SizedBox(height: 15,),
             Expanded(child:  StreamBuilder<QuerySnapshot>(
               stream: DatabaseService().userCollection.snapshots(),
@@ -91,6 +90,47 @@ class _MembersState extends State<Members> {
     );
   }
 
+    Widget _buildImage() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 90,
+            width: 90,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 90,
+            height: 90,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/logo.jpg'),
+            ),
+          );
+        }
+      }),
+      SizedBox(width: 20,),
+      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+    ],
+  );
+
   Widget _buildImageWithName(String groupName) =>Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -142,6 +182,8 @@ class _MembersState extends State<Members> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox( width: 10,),
+        _avatar(userId),
+        SizedBox(width: 10,),
         _buildRows(document['userName']),
         Spacer(),
         _buildRows(snapshot.data+ " PLN"),   
@@ -167,6 +209,45 @@ class _MembersState extends State<Members> {
       }
     );
   }
+
+    Widget _avatar(String uid) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext(uid), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 40,
+            width: 40,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 40,
+            height: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 40,
+            height: 40,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/avatar.jpg'),
+            ),
+          );
+        }
+      }),
+    ],
+  );
 
 }
 

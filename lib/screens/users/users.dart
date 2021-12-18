@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:provider/provider.dart';
+import 'package:splitcost/models/myUser.dart';
+import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/screens/users/accountSettings.dart';
 import 'package:splitcost/screens/users/iconWidget.dart';
 import 'package:splitcost/screens/users/removeAccount.dart';
@@ -18,14 +20,17 @@ class _UsersState extends State<Users> {
   final AuthService auth = AuthService();
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser>(context);
     return Consumer(
       builder: (context,ThemeModel themeNotifier,child){
     return Scaffold(
-     // backgroundColor: Theme.of(context).primaryColor,
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.all(24),
           children: [
+            SizedBox(height: 10,),
+            _avatar(user.uid),
+            SizedBox(height: 32,),
             SettingsGroup(
               title: 'Ogólne',
               children: <Widget>[
@@ -118,5 +123,44 @@ class _UsersState extends State<Users> {
       }
     );
   }
+
+  Widget _avatar(String uid) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FutureBuilder(
+      future:  FirebaseApi.loadImageWithoutContext(uid), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if(snapshot.connectionState== ConnectionState.waiting)
+        {
+          return Container(
+            height: 120,
+            width: 120,
+            child: CircularProgressIndicator(),
+          );
+        }
+        if(snapshot.hasData){
+          return Container(
+            width: 120,
+            height: 120,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(
+                snapshot.data.toString(),
+              ),
+            ),
+          );
+      } else{
+        return Container(
+            width: 120,
+            height: 120,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/avatar.jpg'),
+            ),
+          );
+        }
+      }),
+    ],
+  );
 
 }

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:splitcost/models/myUser.dart';
-import 'package:splitcost/screens/groups/group.dart';
 
 class DatabaseService {
 

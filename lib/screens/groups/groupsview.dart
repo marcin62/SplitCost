@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:splitcost/screens/groups/members/members.dart';
-import 'package:splitcost/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'package:splitcost/models/myUser.dart';
 import 'package:splitcost/services/database.dart';
-import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
 import 'package:splitcost/validators/errordialog.dart';
 import 'package:uuid/uuid.dart';
@@ -20,8 +18,10 @@ class _GroupsViewState extends State<GroupsView> {
 
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<MyUser>(context);
+
     return Scaffold(
-      //backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
         stream: DatabaseService().groupsCollection.orderBy('groupName').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
@@ -39,7 +39,7 @@ class _GroupsViewState extends State<GroupsView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-         _showDialog();
+         _showDialog(user.uid);
         },
         splashColor: Theme.of(context).secondaryHeaderColor,
         child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
@@ -49,7 +49,7 @@ class _GroupsViewState extends State<GroupsView> {
   }
 
 
-  void _showDialog(){
+  void _showDialog(String userId){
     String groupName="";
     showDialog(
       context: context, 
@@ -79,8 +79,8 @@ class _GroupsViewState extends State<GroupsView> {
                   //_showError("Nie podałeś nazwy grupy");
                  else{
                   List members = new List();
-                  members.add(uid);
-                  await DatabaseService().updateGroupData(groupName, Uuid().v4(), uid, members);
+                  members.add(userId);
+                  await DatabaseService().updateGroupData(groupName, Uuid().v4(), userId, members);
                   Navigator.pop(context);
                  }
                  },
@@ -95,4 +95,5 @@ class _GroupsViewState extends State<GroupsView> {
       }
     );
   }
+  
 }
