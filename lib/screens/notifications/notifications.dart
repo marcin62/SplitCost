@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splitcost/services/database.dart';
@@ -8,6 +10,7 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  ScrollController _scrollController = new ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +24,8 @@ class _NotificationsState extends State<Notifications> {
                 }
                 else{
                   return ListView(
+                    controller: _scrollController,
+                    //reverse: true,
                      children: snapshot.data.docs.map<Widget>((document){
                        return MessageTile(message: document['message']);
                      }).toList(),
@@ -46,7 +51,7 @@ class MessageTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24,vertical: 8),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Theme.of(context).backgroundColor,Theme.of(context).dividerColor]
+            colors: [Theme.of(context).splashColor,Theme.of(context).dividerColor]
           ),
         borderRadius: BorderRadius.only(topLeft:Radius.circular(23),topRight:Radius.circular(23),bottomRight: Radius.circular(23) ),
         ),

@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
       // bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',color: Colors.white),
     ),
     buttonColor: MyColors.color2,
+    splashColor: MyColors.color3,
   );
 
   ThemeData _light = ThemeData(
@@ -65,5 +66,6 @@ class MyApp extends StatelessWidget {
     dividerColor: Colors.pink ,
     hoverColor: MyColors.color2,
     buttonColor: MyColors.color5,
+    splashColor: Colors.red,
   );
 }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +13,7 @@ import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/style/theme.dart';
 
 class Users extends StatefulWidget {
+  File file;
   @override
   _UsersState createState() => _UsersState();
 }
@@ -29,7 +33,12 @@ class _UsersState extends State<Users> {
           padding: EdgeInsets.all(24),
           children: [
             SizedBox(height: 10,),
-            _avatar(user.uid),
+            GestureDetector(
+              child: _avatar(user.uid),
+              onTap: ()  async => {
+                await uploadFile(user.uid),
+              },
+            ),
             SizedBox(height: 32,),
             SettingsGroup(
               title: 'Ogólne',
@@ -162,5 +171,14 @@ class _UsersState extends State<Users> {
       }),
     ],
   );
+
+   Future uploadFile(String destination) async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    final path = result.files.single.path;
+    setState(() {
+    widget.file = File(path);
+    });
+    FirebaseApi.uploadFile(destination, widget.file);
+  }
 
 }
