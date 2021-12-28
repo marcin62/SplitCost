@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
+import 'package:splitcost/models/myUser.dart';
 import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
 import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
 import 'package:splitcost/screens/groups/expenses/splitUnEquelly.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
+import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -20,8 +23,8 @@ class Expenses extends StatefulWidget {
 class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<MyUser>(context);
      return Scaffold(
-       //backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
@@ -54,6 +57,11 @@ class _ExpensesState extends State<Expenses> {
                           Text(document['description'],style: TextStyle(fontSize: 20),),
                           Spacer(),
                           Text(document['price'] + " PLN",style: TextStyle(fontSize: 20),),
+                          SizedBox(width: 10,),
+                          if(document['ownerid']==user.uid)
+                          _buildRemoveExpenseButton(document['expenseid'])
+                          else 
+                          _buildInfoButton(),
                         ],
                       ),
                     );
@@ -76,6 +84,16 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
+ Widget _buildRemoveExpenseButton(String expenseid) => ElevatedButton(
+    style: MyDecoration.remindbuttonStyle,
+    child: Icon(Icons.remove,color: Colors.redAccent,),
+    onPressed:() async {DatabaseService().deleteExpense(widget.group.groupid, expenseid);}
+  );
+
+  Widget _buildInfoButton() => ElevatedButton(
+    style: MyDecoration.remindbuttonStyle,
+    child: Icon(Icons.face,color: Colors.greenAccent,),
+  );
 
   void _showDialog(){
     showDialog(
@@ -137,25 +155,6 @@ class _ExpensesState extends State<Expenses> {
       }
     );
   }
-
-  Widget _buildImage2() => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/logo.jpg'),
-            fit: BoxFit.fill,
-          ),
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white)),
-      ),
-      SizedBox(width: 20,),
-      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
-    ],
-  );
 
     Widget _buildImage() => Row(
     mainAxisAlignment: MainAxisAlignment.center,

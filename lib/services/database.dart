@@ -133,6 +133,11 @@ class DatabaseService {
     });
   }
 
+Future deleteExpense(String groupid,String expenseid) async
+{
+  await groupsCollection.doc(groupid).collection("expenses").doc(expenseid).delete();
+} 
+
  Future deleteUserdata(String userid) async {
 
    userCollection.doc(userid).delete();

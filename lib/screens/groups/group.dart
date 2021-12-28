@@ -20,6 +20,7 @@ class Group extends StatefulWidget {
 class _GroupState extends State<Group> {
   @override
   Widget build(BuildContext context) {
+    MyGroup myGroup = new MyGroup(groupName:  widget.groupname,groupid: widget.groupid,members: widget.members,ownerid: widget.groupid);
     return Center(
       child: Container(
         padding: EdgeInsets.all(10),

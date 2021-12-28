@@ -176,7 +176,7 @@ class _SplitUnEquellyState extends State<SplitUnEquelly> {
     {
       if(percent[i]!=0 && users[i]!=ownerid){
         double howmany = percent[i];
-        await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toString(), users[i], groupid, expenseid);
+        await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toStringAsFixed(2), users[i], groupid, expenseid);
         await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ howmany.toString(),Timestamp.fromDate(DateTime.now()));
       }
     }

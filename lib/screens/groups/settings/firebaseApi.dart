@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-// import 'package:image_picker/image_picker.dart';
 
 class FirebaseApi {
   static UploadTask uploadFile(String destination, File file) {
@@ -15,6 +14,6 @@ class FirebaseApi {
   }
 
   static Future<dynamic> loadImageWithoutContext(String image) async {
-    return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+    return await FirebaseStorage.instance.ref().child(image).getDownloadURL().catchError(print);
   }
 }

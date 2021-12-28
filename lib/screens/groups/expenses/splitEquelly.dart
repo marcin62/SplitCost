@@ -153,7 +153,7 @@ class _SplitEquellyState extends State<SplitEquelly> {
   for(int i=0;i<users.length;i++)
   {
     if(bools[i]==true && users[i]!=ownerid){
-       await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), priceperperson.toString(), users[i], groupid, expenseid);
+       await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), priceperperson.toStringAsFixed(2), users[i], groupid, expenseid);
        await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ priceperperson.toString(),Timestamp.fromDate(DateTime.now()));
     }
   }

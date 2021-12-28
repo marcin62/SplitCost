@@ -44,7 +44,7 @@ class _UsersManagementState extends State<UsersManagement> {
                   border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               child: ListView(
-                physics: const NeverScrollableScrollPhysics(),
+                //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: snapshot.data.docs.map((document) {
                   if(widget.group.members.contains(document['userId']))

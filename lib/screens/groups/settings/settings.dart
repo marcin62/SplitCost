@@ -29,7 +29,6 @@ class _SettingsState extends State<SettingsView> {
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
           children: [
-            //Expanded(child:img),
             _buildImage(),
             SizedBox(height: 20,),
             Text("Usuń członków",style: TextStyle(fontSize: 20),),

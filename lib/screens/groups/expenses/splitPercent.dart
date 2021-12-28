@@ -176,7 +176,7 @@ class _SplitPercentState extends State<SplitPercent> {
     {
       if(percent[i]!=0 && users[i]!=ownerid){
         double howmany = percent[i]/100*pricedouble;
-        await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toString(), users[i], groupid, expenseid);
+        await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toStringAsFixed(2), users[i], groupid, expenseid);
         await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ howmany.toString(),Timestamp.fromDate(DateTime.now()));
       }
     }
