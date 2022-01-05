@@ -23,20 +23,39 @@ class _GroupsViewState extends State<GroupsView> {
 
     return Scaffold(
       body: StreamBuilder(
-        stream: DatabaseService().groupsCollection.orderBy('groupName').snapshots(),
+        stream: DatabaseService().groupsCollection.where('members',arrayContains: user.uid).orderBy('groupName').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-          if(!snapshot.hasData){
+          if(snapshot.connectionState == ConnectionState.waiting)
+          {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
+          else if(!snapshot.hasData){
+            return ListView(
+              children: [
+                Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 50,),
+                  Text("Nie należysz do żadnej grupy, dołącz lub stwórz własną",style: TextStyle(fontSize: 20,),textAlign: TextAlign.center,),
+                  SizedBox(height: 30,),
+                  buildImageNoData(),
+                ],
+              ),
+            )
+              ],
+            );
+          }
+          else {
           return ListView(
             children: snapshot.data.docs.map((document){
               return Group(groupname: document['groupName'],groupid: document['groupId'],ownerid: document['ownerId'],members : document['members']);
             }).toList(),
           );
-        },
-      ),
+        }
+        }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
          _showDialog(user.uid);
@@ -95,5 +114,14 @@ class _GroupsViewState extends State<GroupsView> {
       }
     );
   }
+
+  Widget buildImageNoData()=>Container(
+    width: 300,
+    height: 300,
+    child: CircleAvatar(
+      radius: 0,
+      backgroundImage: AssetImage('assets/images/nodata.png'),
+    ),
+  );
   
 }

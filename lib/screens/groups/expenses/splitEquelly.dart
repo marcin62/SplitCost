@@ -106,7 +106,7 @@ class _SplitEquellyState extends State<SplitEquelly> {
             ErrorDialog(error: "Musisz zaznaczyć użytkowników na których chcesz podzielić koszty",context: context).showError();
           }else{
             await addEquellyExpense(price, bools, widget.group.members, user.uid, widget.group.groupid, description, Uuid().v4());
-            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()));
+            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price,Timestamp.fromDate(DateTime.now()),widget.group.groupid);
             Navigator.pop(context);
             Navigator.pop(context);
           }
@@ -154,7 +154,7 @@ class _SplitEquellyState extends State<SplitEquelly> {
   {
     if(bools[i]==true && users[i]!=ownerid){
        await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), priceperperson.toStringAsFixed(2), users[i], groupid, expenseid);
-       await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ priceperperson.toString(),Timestamp.fromDate(DateTime.now()));
+       await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ priceperperson.toString(),Timestamp.fromDate(DateTime.now()),widget.group.groupid);
     }
   }
   }

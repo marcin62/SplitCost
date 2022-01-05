@@ -29,7 +29,7 @@ class _UsersManagementState extends State<UsersManagement> {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
       child: StreamBuilder(
-        stream: DatabaseService().userCollection.orderBy('email').snapshots(),
+        stream: DatabaseService().userCollection.where('userId',whereIn:widget.group.members).orderBy('email').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -44,11 +44,8 @@ class _UsersManagementState extends State<UsersManagement> {
                   border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               child: ListView(
-                //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: snapshot.data.docs.map((document) {
-                  if(widget.group.members.contains(document['userId']))
-                  {
                   return Column(
                     children: [
                       Row(
@@ -73,10 +70,6 @@ class _UsersManagementState extends State<UsersManagement> {
                       ),
                     ],
                   );
-                  }
-                else {
-                  return SizedBox();
-                }
                 }).toList(),
               ));
         },

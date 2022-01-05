@@ -37,7 +37,7 @@ class _MembersState extends State<Members> {
             _buildImage(),
             SizedBox(height: 15,),
             Expanded(child:  StreamBuilder<QuerySnapshot>(
-              stream: DatabaseService().userCollection.snapshots(),
+               stream: DatabaseService().userCollection.where('userId',whereIn:widget.group.members).orderBy('email').snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(!snapshot.hasData){
                   return Center(
@@ -47,7 +47,7 @@ class _MembersState extends State<Members> {
                 return StatefulBuilder( builder: (context,setState){
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
-                    if(widget.group.members.contains(document['userId'])&&user.uid!=document['userId']){
+                    if(user.uid!=document['userId']){
                         return FutureBuilder(
                         future: DatabaseService().getprice(user.uid, widget.group.groupid, document['userId']), // a previously-obtained Future<String> or null
                         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -126,7 +126,7 @@ class _MembersState extends State<Members> {
           );
         }
       }),
-      SizedBox(width: 20,),
+      SizedBox(width: 10,),
       Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );
@@ -160,7 +160,7 @@ class _MembersState extends State<Members> {
     onPressed:() async {
       String username = await DatabaseService().getUsersKey(owner);
       ErrorDialog(error: 'Właśnie wysłałeś przypomnienie o spłacie długu',context: context).showError();
-      DatabaseService().addMessageToUser(userid, "Użytkownik " + username + " prosi o uregulowanie dłużności w grupie " + groupname +" na kwotę " +price +".", Timestamp.fromDate(DateTime.now()));
+      DatabaseService().addMessageToUser(userid, "Użytkownik " + username + " prosi o uregulowanie dłużności w grupie " + groupname +" na kwotę " +price +".", Timestamp.fromDate(DateTime.now()),widget.group.groupid);
     }
   );
 

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:splitcost/models/myMessage.dart';
 import 'package:splitcost/models/myUser.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseService {
 
@@ -53,11 +55,21 @@ class DatabaseService {
     });
   }
 
-  Future addMessageToUser(String userid,String message, Timestamp date) async {
-    return await userCollection.doc(userid).collection('messages').doc().set({
+  Future addMessageToUser(String userid,String message, Timestamp date,String groupid) async {
+    String id =  Uuid().v4();
+    return await userCollection.doc(userid).collection('messages').doc(id).set({
         'date' : date,
         'message' : message, 
+        'groupId' : groupid,
+        'see' : false,
+        'messageid' : id,
       });
+  }
+
+  Future makemessageread(String userid,String messageid) async {
+    return await userCollection.doc(userid).collection('messages').doc(messageid).update({
+      'see' : true,
+    });
   }
 
   Future checUserName(String userName) async {
@@ -214,4 +226,31 @@ Future deleteExpense(String groupid,String expenseid) async
     });
   }
 
+  Future deletegroup(String groupid)async {
+    await groupsCollection.doc(groupid).delete();
+    await deletemessegesfromgroup(groupid);
+  }
+
+  Future deletemessegesfromgroup(String groupid) async {
+   userCollection.get().then((value) => {
+     for(DocumentSnapshot ds in value.docs){
+       ds.reference.collection('messages').where('groupId',isEqualTo: groupid).get().then((value2) => {
+         for(DocumentSnapshot ds2 in value2.docs ){
+           ds2.reference.delete(),
+         }
+       })
+     }
+   });
+  }
+
+  Stream<List<MyMessage>> messagesgroup(String group){
+    final Query mylist = userCollection.doc(uid).collection('messages').where("groupId", isEqualTo: group).orderBy('date',descending: true);
+    if(group == "Wszystko")
+      return getMessages();
+    return mylist.snapshots().map((snapshot) => snapshot.docs.map((document) => MyMessage.fromFirestore(document.data())).toList());
+  }
+
+   Stream<List<MyMessage>> getMessages(){
+    return userCollection.doc(uid).collection('messages').orderBy('date',descending: true).snapshots().map((snapshot) => snapshot.docs.map((document) => MyMessage.fromFirestore(document.data())).toList());
+  }
 }

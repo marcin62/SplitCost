@@ -7,7 +7,6 @@ import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
 import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
 import 'package:splitcost/screens/groups/expenses/splitUnEquelly.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
-import 'package:splitcost/services/auth.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -36,11 +35,30 @@ class _ExpensesState extends State<Expenses> {
         StreamBuilder<QuerySnapshot>(
               stream: DatabaseService().groupsCollection.doc(widget.group.groupid).collection('expenses').snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
-                if(!snapshot.hasData){
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                 if(snapshot.connectionState == ConnectionState.waiting)
+                  {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  else if(!snapshot.hasData){
+                    return ListView(
+                      children: [
+                        Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 50,),
+                          Text("W tej grupie nie ma wydatków, możesz dodać wydatek klikając przycisk u dołu ekranu",style: TextStyle(fontSize: 20,),textAlign: TextAlign.center,),
+                          SizedBox(height: 30,),
+                          buildImageNoData(),
+                        ],
+                      ),
+                    )
+                      ],
+                    );
+                  }
+                  else {
                 return ListView(
                   children: snapshot.data.docs.map<Widget>((document){
                     return Container(
@@ -67,6 +85,7 @@ class _ExpensesState extends State<Expenses> {
                     );
                   }).toList(),
                 );
+                  }
               },
             ),
         ),
@@ -83,6 +102,15 @@ class _ExpensesState extends State<Expenses> {
       ),
     );
   }
+
+   Widget buildImageNoData()=>Container(
+    width: 300,
+    height: 300,
+    child: CircleAvatar(
+      radius: 0,
+      backgroundImage: AssetImage('assets/images/nodata.png'),
+    ),
+  );
 
  Widget _buildRemoveExpenseButton(String expenseid) => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
@@ -118,7 +146,7 @@ class _ExpensesState extends State<Expenses> {
                       MaterialPageRoute(builder: (context) => SplitEquelly(group: widget.group,),),
                     );
                     },
-                    child: Text("Podziel porówno")
+                    child: Text("Podziel po równo")
                   ),
                   SizedBox(height: 10,),
                   ElevatedButton(
@@ -192,7 +220,7 @@ class _ExpensesState extends State<Expenses> {
           );
         }
       }),
-      SizedBox(width: 20,),
+      SizedBox(width: 10,),
       Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/screens/groups/settings/usersmanagement.dart';
+import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/inputdecoration.dart';
 import 'package:splitcost/validators/errordialog.dart';
 
@@ -33,7 +34,11 @@ class _SettingsState extends State<SettingsView> {
             SizedBox(height: 20,),
             Text("Usuń członków",style: TextStyle(fontSize: 20),),
             SizedBox(height: 10,),
-            Expanded(child: UsersManagement(group: widget.group,)),
+            Container(
+              height: 400,
+              child:Expanded(child: UsersManagement(group: widget.group,)),
+            ),
+            SizedBox(height: 20,),
             Container(
               width: MediaQuery.of(context).size.width/5*4,
               child: _buildChangePhotoButton(widget.group.groupid),
@@ -87,7 +92,7 @@ class _SettingsState extends State<SettingsView> {
           );
         }
       }),
-      SizedBox(width: 20,),
+      SizedBox(width: 10,),
       Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );
@@ -119,7 +124,9 @@ class _SettingsState extends State<SettingsView> {
         SizedBox(width: 30,)
       ],
     ),
-    onPressed:() async {}
+    onPressed:() async {
+      _showDialog(groupid);
+    }
   );
 
   Future uploadFile() async {
@@ -131,5 +138,35 @@ class _SettingsState extends State<SettingsView> {
     final destination ="${widget.group.groupid}";
     FirebaseApi.uploadFile(destination, widget.file);
   }
+
+  void _showDialog(String groupId){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+         return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text("Czy napewno chcesz usunąć grupę"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                  await DatabaseService().deletegroup(groupId);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                 },
+                child: Text("Stwórz grupe",style: TextStyle(color: Theme.of(context).hintColor),),
+              ),
+              TextButton(
+                onPressed: ()=> Navigator.pop(context),
+                child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
+              ),
+            ],
+            );
+      }
+    );
+  }
+
 
 }

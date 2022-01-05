@@ -27,7 +27,7 @@ class PayDebt extends StatelessWidget {
                   String username = await DatabaseService().getUsersKey(userid);
                   DatabaseService().deleteDebt(userid, owner, group.groupid);
                   DatabaseService().deleteDebt2(userid, owner, group.groupid);
-                  DatabaseService().addMessageToUser(owner, "Spłaciłeś dług użytkownikowi " +  username +" na kwotę "+ price+ " w grupie " + group.groupName +".", Timestamp.fromDate(DateTime.now()));
+                  DatabaseService().addMessageToUser(owner, "Spłaciłeś dług użytkownikowi " +  username +" na kwotę "+ price+ " w grupie " + group.groupName +".", Timestamp.fromDate(DateTime.now()),group.groupid);
                   Navigator.pop(context);
                   Navigator.pop(context); //cos trzeba poprawic;
                   MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: group.ownerid,groupName: group.groupName,groupid:group.groupid,members: group.members)));

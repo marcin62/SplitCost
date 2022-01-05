@@ -63,10 +63,10 @@ class AddMember extends StatelessWidget {
                    else {
                     await DatabaseService().updateMembersOfGroup(group.members, group.groupid);
                     Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: group.ownerid,groupName: group.groupName,groupid:group.groupid,members: group.members))),);
+                    // Navigator.pop(context);
+                    // Navigator.push(
+                    // context,
+                    // MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: group.ownerid,groupName: group.groupName,groupid:group.groupid,members: group.members))),);
                    }
                  }
                  },

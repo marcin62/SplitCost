@@ -135,7 +135,7 @@ class _SplitUnEquellyState extends State<SplitUnEquelly> {
             ErrorDialog(error: "Muisz rozdać wszystkie koszty kosztów",context: context).showError();
           }else{
             await addUnEquellyExpense(price.toString(), prices, widget.group.members, user.uid, widget.group.groupid, description, Uuid().v4());
-            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price.toString(),Timestamp.fromDate(DateTime.now()));
+            await DatabaseService().addMessageToUser(user.uid, "Właśnie dodałeś wydatek w grupie " +widget.group.groupName + " na kwote " + price.toString(),Timestamp.fromDate(DateTime.now()),widget.group.groupid);
             Navigator.pop(context);
             Navigator.pop(context);
           }
@@ -177,7 +177,7 @@ class _SplitUnEquellyState extends State<SplitUnEquelly> {
       if(percent[i]!=0 && users[i]!=ownerid){
         double howmany = percent[i];
         await DatabaseService().addDetailsOfExpenses(ownerid, Uuid().v4(), howmany.toStringAsFixed(2), users[i], groupid, expenseid);
-        await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ howmany.toString(),Timestamp.fromDate(DateTime.now()));
+        await DatabaseService().addMessageToUser(users[i], "Dodano nowy koszt w grupie "+ widget.group.groupName+ " do którego przynależysz. Na kwotę "+ howmany.toString(),Timestamp.fromDate(DateTime.now()),widget.group.groupid);
       }
     }
 

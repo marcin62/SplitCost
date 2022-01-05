@@ -38,26 +38,14 @@ class _GroupState extends State<Group> {
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
                 _buildImage(),
-              // Container(
-              //   height: 80.0,
-              //   width: 80.0,
-              //   decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: AssetImage('assets/images/logo.jpg'),
-              //       fit: BoxFit.fill,
-              //     ),
-              //   shape: BoxShape.circle,
-              //   border: Border.all(width: 2, color: Colors.white)),
-              //   padding: EdgeInsets. symmetric(vertical: 10.0, horizontal: 5.0)
-              // ),
-              SizedBox( width: 20,),
+              SizedBox( width: 10,),
               Column(
                 children: [
                   Text(widget.groupname, style: TextStyle(color: MyColors.white,fontSize: 25),),
                   Text('Ilość członków: '+widget.members.length.toString(), style: TextStyle(color: MyColors.white,fontSize: 15),),
                 ],
               ),
-              SizedBox( width: 20,),
+              SizedBox( width: 10,),
               SizedBox(height: 10,),
               GestureDetector(
                 onTap: () {

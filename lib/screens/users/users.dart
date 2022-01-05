@@ -45,7 +45,7 @@ class _UsersState extends State<Users> {
               children: <Widget>[
                 buildAccount(),
                 buildDarkMode(themeNotifier),
-                buildCurrency(),
+                //buildCurrency(),
               ],
             ),
             const SizedBox(height: 32,),
