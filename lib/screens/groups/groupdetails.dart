@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/expenses.dart';
 import 'package:splitcost/screens/groups/members/members.dart';
 import 'package:splitcost/screens/groups/settings/settings.dart';
+import 'package:splitcost/services/database.dart';
 
 class GroupDetail extends StatefulWidget {
   MyGroup group;
@@ -22,9 +24,9 @@ class _GroupDetailState extends State<GroupDetail> {
   }
 
   Widget _selectScreen(BuildContext context){ 
-    if(_selectedIndex == 0) return Expenses(group: widget.group); 
-    if(_selectedIndex == 1) return Members(group: widget.group);
-    else return SettingsView(group: widget.group,);
+    if(_selectedIndex == 0) return Expenses(); 
+    if(_selectedIndex == 1) return Members();
+    else return SettingsView();
   }
 
 
@@ -32,11 +34,15 @@ class _GroupDetailState extends State<GroupDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        padding: EdgeInsets.only(top: 50),
-        height: double.infinity,
-        width: double.infinity,
-        child: _selectScreen(context),
+      body: StreamProvider<MyGroup>.value(
+        value: DatabaseService().getGroup(widget.group.groupid), 
+        initialData: widget.group,  
+        child: Container(
+          padding: EdgeInsets.only(top: 50),
+          height: double.infinity,
+          width: double.infinity,
+          child: _selectScreen(context),
+        ),
       ),
        bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

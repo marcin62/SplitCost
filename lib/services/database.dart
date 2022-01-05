@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myMessage.dart';
 import 'package:splitcost/models/myUser.dart';
 import 'package:uuid/uuid.dart';
@@ -28,6 +29,12 @@ class DatabaseService {
       'groupId' : groupid,
       'ownerId' : ownerid,
       'members' : members,
+    });
+  }
+
+  Future updateGroupName(String groupName, String groupid) async {
+    return await groupsCollection.doc(groupid).update({
+      'groupName' : groupName,
     });
   }
 
@@ -252,5 +259,8 @@ Future deleteExpense(String groupid,String expenseid) async
 
    Stream<List<MyMessage>> getMessages(){
     return userCollection.doc(uid).collection('messages').orderBy('date',descending: true).snapshots().map((snapshot) => snapshot.docs.map((document) => MyMessage.fromFirestore(document.data())).toList());
+  }
+  Stream<MyGroup> getGroup(String group){
+    return groupsCollection.doc(group).snapshots().map((document) =>MyGroup.fromFirestore(document.data()));
   }
 }

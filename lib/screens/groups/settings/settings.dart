@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/screens/groups/settings/usersmanagement.dart';
@@ -12,9 +10,7 @@ import 'package:splitcost/style/inputdecoration.dart';
 import 'package:splitcost/validators/errordialog.dart';
 
 class SettingsView extends StatefulWidget {
-  MyGroup group;
   File file;
-  SettingsView({this.group});
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -23,44 +19,51 @@ class _SettingsState extends State<SettingsView> {
   
   @override
   Widget build(BuildContext context) {
-
+    final group = Provider.of<MyGroup>(context);
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
-        child: Column(
-          children: [
-            _buildImage(),
-            SizedBox(height: 20,),
-            Text("Usuń członków",style: TextStyle(fontSize: 20),),
-            SizedBox(height: 10,),
-            Container(
-              height: 400,
-              child:Expanded(child: UsersManagement(group: widget.group,)),
-            ),
-            SizedBox(height: 20,),
-            Container(
-              width: MediaQuery.of(context).size.width/5*4,
-              child: _buildChangePhotoButton(widget.group.groupid),
-            ),
-            SizedBox(height: 10,),
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width/5*4,
-                child: _buildRemoveGroupButton(widget.group.groupid),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
+          child: Column(
+            children: [
+              _buildImage(group),
+              SizedBox(height: 20,),
+              Text("Usuń członków",style: TextStyle(fontSize: 20),),
+              SizedBox(height: 10,),
+              Container(
+                height: 320,
+                child:Expanded(child: UsersManagement(group: group,)),
               ),
-            )
-          ],
-        )
+              SizedBox(height: 20,),
+              Container(
+                width: MediaQuery.of(context).size.width/5*4,
+                child: _buildGroupName(group),
+              ),
+              SizedBox(height: 10,),
+              Container(
+                width: MediaQuery.of(context).size.width/5*4,
+                child: _buildChangePhotoButton(group),
+              ),
+              SizedBox(height: 10,),
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width/5*4,
+                  child: _buildRemoveGroupButton(group.groupid),
+                ),
+              )
+            ],
+          )
+        ),
       )
     );
   }
 
-  Widget _buildImage() => Row(
+  Widget _buildImage(MyGroup group) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       FutureBuilder(
-      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      future:  FirebaseApi.loadImageWithoutContext("${group.groupid}"), // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if(snapshot.connectionState== ConnectionState.waiting)
         {
@@ -93,11 +96,27 @@ class _SettingsState extends State<SettingsView> {
         }
       }),
       SizedBox(width: 10,),
-      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+      Text(group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );
 
-  Widget _buildChangePhotoButton(String groupid) => ElevatedButton(
+  Widget _buildGroupName(MyGroup group) => ElevatedButton(
+     style: MyDecoration.remindbuttonStyle,
+    child: Row(
+      children: [
+        SizedBox(width: 30,),
+        Text('Zmień nazwę grupy',style: TextStyle(fontSize: 20),),
+        Spacer(),
+        Icon(Icons.info,color: Colors.greenAccent,),
+        SizedBox(width: 30,)
+      ],
+    ),
+    onPressed:() async {
+     _changegroupname(group);
+    }
+  );
+
+  Widget _buildChangePhotoButton(MyGroup group) => ElevatedButton(
      style: MyDecoration.remindbuttonStyle,
     child: Row(
       children: [
@@ -109,7 +128,7 @@ class _SettingsState extends State<SettingsView> {
       ],
     ),
     onPressed:() async {
-      await uploadFile();
+      await uploadFile(group);
     }
   );
 
@@ -129,13 +148,13 @@ class _SettingsState extends State<SettingsView> {
     }
   );
 
-  Future uploadFile() async {
+  Future uploadFile(MyGroup group) async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
     final path = result.files.single.path;
     setState(() {
     widget.file = File(path);
     });
-    final destination ="${widget.group.groupid}";
+    final destination ="${group.groupid}";
     FirebaseApi.uploadFile(destination, widget.file);
   }
 
@@ -156,7 +175,51 @@ class _SettingsState extends State<SettingsView> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                  },
-                child: Text("Stwórz grupe",style: TextStyle(color: Theme.of(context).hintColor),),
+                child: Text("Usuń grupe",style: TextStyle(color: Theme.of(context).hintColor),),
+              ),
+              TextButton(
+                onPressed: ()=> Navigator.pop(context),
+                child: Text("Anuluj",style: TextStyle(color: Theme.of(context).hintColor),),
+              ),
+            ],
+            );
+      }
+    );
+  }
+
+  void _changegroupname(MyGroup group){
+    String groupName=group.groupName;
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+         return AlertDialog(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text("Zmień nazwę grupy"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+             content: TextFormField(
+                       decoration: MyDecoration.textInputDecoration.copyWith(hintText: groupName,hintStyle: TextStyle(color: Theme.of(context).hintColor, fontSize: 17),fillColor: Theme.of(context).buttonColor,
+                                suffixIcon: Padding(
+                                    padding: EdgeInsets.only(right: 20),
+                                    child: Icon(Icons.group,
+                                        color: Theme.of(context).cardColor, size: 25.0)),
+                              ),
+                      onChanged: (val) {
+                        setState(() => groupName = val);
+                      },
+                ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                   if(groupName == "")
+                  ErrorDialog(error: "Nie podałeś nazwy grupy",context: context).showError();
+                 else{
+                  await DatabaseService().updateGroupName(groupName,group.groupid);
+                  Navigator.pop(context);
+                 }
+                 },
+                child: Text("Zmień nazwę",style: TextStyle(color: Theme.of(context).hintColor),),
               ),
               TextButton(
                 onPressed: ()=> Navigator.pop(context),

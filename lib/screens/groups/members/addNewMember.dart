@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/inputdecoration.dart';
@@ -63,10 +64,6 @@ class AddMember extends StatelessWidget {
                    else {
                     await DatabaseService().updateMembersOfGroup(group.members, group.groupid);
                     Navigator.pop(context);
-                    // Navigator.pop(context);
-                    // Navigator.push(
-                    // context,
-                    // MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: group.ownerid,groupName: group.groupName,groupid:group.groupid,members: group.members))),);
                    }
                  }
                  },

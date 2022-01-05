@@ -13,8 +13,6 @@ import 'package:splitcost/style/inputdecoration.dart';
 
 
 class Expenses extends StatefulWidget {
-  MyGroup group;
-  Expenses({this.group});
   @override
   _ExpensesState createState() => _ExpensesState();
 }
@@ -23,17 +21,18 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser>(context);
+    final group = Provider.of<MyGroup>(context);
      return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
       children: [
-        _buildImage(),
+        _buildImage(group),
         SizedBox(height: 15,),
         Expanded( child:
         StreamBuilder<QuerySnapshot>(
-              stream: DatabaseService().groupsCollection.doc(widget.group.groupid).collection('expenses').snapshots(),
+              stream: DatabaseService().groupsCollection.doc(group.groupid).collection('expenses').snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
                  if(snapshot.connectionState == ConnectionState.waiting)
                   {
@@ -77,7 +76,7 @@ class _ExpensesState extends State<Expenses> {
                           Text(document['price'] + " PLN",style: TextStyle(fontSize: 20),),
                           SizedBox(width: 10,),
                           if(document['ownerid']==user.uid)
-                          _buildRemoveExpenseButton(document['expenseid'])
+                          _buildRemoveExpenseButton(document['expenseid'],group.groupid)
                           else 
                           _buildInfoButton(),
                         ],
@@ -94,7 +93,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-         _showDialog();
+         _showDialog(group);
         },
         splashColor: Theme.of(context).secondaryHeaderColor,
         child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
@@ -112,10 +111,10 @@ class _ExpensesState extends State<Expenses> {
     ),
   );
 
- Widget _buildRemoveExpenseButton(String expenseid) => ElevatedButton(
+ Widget _buildRemoveExpenseButton(String expenseid,String groupid) => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
     child: Icon(Icons.remove,color: Colors.redAccent,),
-    onPressed:() async {DatabaseService().deleteExpense(widget.group.groupid, expenseid);}
+    onPressed:() async {DatabaseService().deleteExpense(groupid, expenseid);}
   );
 
   Widget _buildInfoButton() => ElevatedButton(
@@ -123,7 +122,7 @@ class _ExpensesState extends State<Expenses> {
     child: Icon(Icons.face,color: Colors.greenAccent,),
   );
 
-  void _showDialog(){
+  void _showDialog(MyGroup group){
     showDialog(
       context: context, 
       builder: (BuildContext context){
@@ -143,7 +142,7 @@ class _ExpensesState extends State<Expenses> {
                      style: MyDecoration.mybuttonStyle,
                     onPressed: () async {Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SplitEquelly(group: widget.group,),),
+                      MaterialPageRoute(builder: (context) => SplitEquelly(group: group,),),
                     );
                     },
                     child: Text("Podziel po równo")
@@ -153,7 +152,7 @@ class _ExpensesState extends State<Expenses> {
                     style: MyDecoration.mybuttonStyle,
                     onPressed: () async {Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SplitPercent(group: widget.group,),),
+                      MaterialPageRoute(builder: (context) => SplitPercent(group: group,),),
                     );
                     },
                     child: Text("Podziel procentowo")
@@ -163,7 +162,7 @@ class _ExpensesState extends State<Expenses> {
                     style: MyDecoration.mybuttonStyle,
                     onPressed: () async {Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SplitUnEquelly(group: widget.group,),),
+                      MaterialPageRoute(builder: (context) => SplitUnEquelly(group: group,),),
                     );
                     },
                     child: Text("Podziel cenowo")
@@ -184,11 +183,11 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
-    Widget _buildImage() => Row(
+    Widget _buildImage(MyGroup group) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       FutureBuilder(
-      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      future:  FirebaseApi.loadImageWithoutContext("${group.groupid}"), // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if(snapshot.connectionState== ConnectionState.waiting)
         {
@@ -221,7 +220,7 @@ class _ExpensesState extends State<Expenses> {
         }
       }),
       SizedBox(width: 10,),
-      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+      Text(group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );
 

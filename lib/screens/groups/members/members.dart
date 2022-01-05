@@ -13,9 +13,6 @@ import 'package:splitcost/validators/errordialog.dart';
 
 class Members extends StatefulWidget {
 
-  MyGroup group;
-  Members({this.group});
-
   @override
   _MembersState createState() => _MembersState();
 }
@@ -26,7 +23,7 @@ class _MembersState extends State<Members> {
  Widget build(BuildContext context) {
 
     final user = Provider.of<MyUser>(context);
-
+    final group = Provider.of<MyGroup>(context);
      return StatefulBuilder( builder: (context,setState){
     return Scaffold(
       body: Container(
@@ -34,10 +31,10 @@ class _MembersState extends State<Members> {
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
         child: Column(
           children: [
-            _buildImage(),
+            _buildImage(group),
             SizedBox(height: 15,),
             Expanded(child:  StreamBuilder<QuerySnapshot>(
-               stream: DatabaseService().userCollection.where('userId',whereIn:widget.group.members).orderBy('email').snapshots(),
+               stream: DatabaseService().userCollection.where('userId',whereIn:group.members).orderBy('email').snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
                 if(!snapshot.hasData){
                   return Center(
@@ -49,10 +46,10 @@ class _MembersState extends State<Members> {
                   children: snapshot.data.docs.map<Widget>((document){
                     if(user.uid!=document['userId']){
                         return FutureBuilder(
-                        future: DatabaseService().getprice(user.uid, widget.group.groupid, document['userId']), // a previously-obtained Future<String> or null
+                        future: DatabaseService().getprice(user.uid, group.groupid, document['userId']), // a previously-obtained Future<String> or null
                         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                           if(snapshot.hasData){
-                          return _buildContainer(snapshot, document, document['userId'],user.uid);
+                          return _buildContainer(snapshot, document, document['userId'],user.uid,group);
                           }
                           else{
                             return Center(
@@ -72,7 +69,7 @@ class _MembersState extends State<Members> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-         _showDialog();
+         _showDialog(group);
         },
         splashColor: Theme.of(context).secondaryHeaderColor,
         child: Icon(Icons.add,color: Theme.of(context).primaryColor,),
@@ -81,20 +78,20 @@ class _MembersState extends State<Members> {
     );});
   }
 
-  void _showDialog(){
+  void _showDialog(MyGroup group){
     showDialog(
       context: context, 
       builder: (BuildContext context){
-        return AddMember(group: widget.group);
+        return AddMember(group: group,);
       }
     );
   }
 
-    Widget _buildImage() => Row(
+    Widget _buildImage(MyGroup group) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       FutureBuilder(
-      future:  FirebaseApi.loadImageWithoutContext("${widget.group.groupid}"), // a previously-obtained Future<String> or null
+      future:  FirebaseApi.loadImageWithoutContext("${group.groupid}"), // a previously-obtained Future<String> or null
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if(snapshot.connectionState== ConnectionState.waiting)
         {
@@ -127,7 +124,7 @@ class _MembersState extends State<Members> {
         }
       }),
       SizedBox(width: 10,),
-      Text(widget.group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
+      Text(group.groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
     ],
   );
 
@@ -154,23 +151,23 @@ class _MembersState extends State<Members> {
      child: Text(text,style: TextStyle(fontSize: 20),),
   );
 
-  Widget _buildRemindButton(String userid,String owner,String groupname,String price) => ElevatedButton(
+  Widget _buildRemindButton(String userid,String owner,String groupname,String price,MyGroup group) => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
     child: Icon(Icons.info,color: Colors.red,),
     onPressed:() async {
       String username = await DatabaseService().getUsersKey(owner);
       ErrorDialog(error: 'Właśnie wysłałeś przypomnienie o spłacie długu',context: context).showError();
-      DatabaseService().addMessageToUser(userid, "Użytkownik " + username + " prosi o uregulowanie dłużności w grupie " + groupname +" na kwotę " +price +".", Timestamp.fromDate(DateTime.now()),widget.group.groupid);
+      DatabaseService().addMessageToUser(userid, "Użytkownik " + username + " prosi o uregulowanie dłużności w grupie " + groupname +" na kwotę " +price +".", Timestamp.fromDate(DateTime.now()),group.groupid);
     }
   );
 
-  Widget _buildPayButton(String userid,String owner,String groupname,String price) => ElevatedButton(
+  Widget _buildPayButton(String userid,String owner,String groupname,String price,MyGroup group) => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
     child: Icon(Icons.money,color: Colors.green,),
-    onPressed:() async {_paydebt(owner,userid,price);}
+    onPressed:() async {_paydebt(owner,userid,price,group);}
   );
 
-  Widget _buildContainer(AsyncSnapshot snapshot,DocumentSnapshot document,String userId,String ownerid) =>Container(
+  Widget _buildContainer(AsyncSnapshot snapshot,DocumentSnapshot document,String userId,String ownerid,MyGroup group) =>Container(
     padding: EdgeInsets.all(10),
     margin: EdgeInsets.symmetric(vertical: 3 , horizontal: 10),
     decoration: BoxDecoration(
@@ -189,9 +186,9 @@ class _MembersState extends State<Members> {
         _buildRows(snapshot.data+ " PLN"),   
         Spacer(),
         if(double.parse(snapshot.data) > 0)
-          _buildRemindButton(userId, ownerid, widget.group.groupName,snapshot.data)
+          _buildRemindButton(userId, ownerid, group.groupName,snapshot.data,group)
         else if(double.parse(snapshot.data) <0)
-          _buildPayButton(userId, ownerid, widget.group.groupName,snapshot.data)
+          _buildPayButton(userId, ownerid, group.groupName,snapshot.data,group)
         else
           Container(
             padding: EdgeInsets.only(right: 3),
@@ -201,11 +198,11 @@ class _MembersState extends State<Members> {
     ),
   );
 
-   void _paydebt(String owner, String userid,String price){
+   void _paydebt(String owner, String userid,String price,MyGroup group){
     showDialog(
       context: context, 
       builder: (BuildContext context){
-        return PayDebt(group: widget.group,owner: owner,userid: userid,price: price,);
+        return PayDebt(group: group,owner: owner,userid: userid,price: price,);
       }
     );
   }
