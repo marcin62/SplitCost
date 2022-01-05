@@ -120,6 +120,9 @@ class _ExpensesState extends State<Expenses> {
   Widget _buildInfoButton() => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
     child: Icon(Icons.face,color: Colors.greenAccent,),
+    onPressed: () => {
+      
+    },
   );
 
   void _showDialog(MyGroup group){
