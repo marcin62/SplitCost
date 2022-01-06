@@ -28,10 +28,12 @@ class _MembersState extends State<Members> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
+        margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
         child: Column(
           children: [
             _buildImage(group),
+            SizedBox(height: 25,),
+            Text("Użytkownicy",style: TextStyle(fontSize: 20),),
             SizedBox(height: 15,),
             Expanded(child:  StreamBuilder<QuerySnapshot>(
                stream: DatabaseService().userCollection.where('userId',whereIn:group.members).orderBy('email').snapshots(),
@@ -42,7 +44,10 @@ class _MembersState extends State<Members> {
                   );
                 }
                 return StatefulBuilder( builder: (context,setState){
-                return ListView(
+                return MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView(
                   children: snapshot.data.docs.map<Widget>((document){
                     if(user.uid!=document['userId']){
                         return FutureBuilder(
@@ -61,7 +66,7 @@ class _MembersState extends State<Members> {
                     else
                     return SizedBox(height: 0,);
                   }).toList(),
-                ); });
+                ),); });
               },
             ),),
           ],
@@ -128,25 +133,6 @@ class _MembersState extends State<Members> {
     ],
   );
 
-  Widget _buildImageWithName(String groupName) =>Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/logo.jpg'),
-            fit: BoxFit.fill,
-          ),
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white)),
-      ),
-      SizedBox(width: 20,),
-      Text(groupName,style: TextStyle(color: Theme.of(context).hintColor,fontSize: 45),)
-    ],
-  );
-
   Widget _buildRows(String text) => Container(
      child: Text(text,style: TextStyle(fontSize: 20),),
   );
@@ -184,7 +170,7 @@ class _MembersState extends State<Members> {
         _buildRows(document['userName']),
         Spacer(),
         _buildRows(snapshot.data+ " PLN"),   
-        Spacer(),
+        SizedBox(width: 10,),
         if(double.parse(snapshot.data) > 0)
           _buildRemindButton(userId, ownerid, group.groupName,snapshot.data,group)
         else if(double.parse(snapshot.data) <0)

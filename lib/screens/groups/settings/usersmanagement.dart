@@ -26,8 +26,7 @@ class _UsersManagementState extends State<UsersManagement> {
     
     final user = Provider.of<MyUser>(context);
 
-    return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
+    return Container(
       child: StreamBuilder(
         stream: DatabaseService().userCollection.where('userId',whereIn:widget.group.members).orderBy('email').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -36,42 +35,40 @@ class _UsersManagementState extends State<UsersManagement> {
               child: CircularProgressIndicator(),
             );
           }
-          return Container(
-              width: MediaQuery.of(context).size.width * 9 / 10,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).hoverColor.withOpacity(0.50),
-                  border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: ListView(
+          return MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: ListView(
                 shrinkWrap: true,
                 children: snapshot.data.docs.map((document) {
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(width: 20),
-                          _avatar(document['userId']),
-                          SizedBox(width: 30,),
-                          Text(
-                            document['userName'],
-                            style: TextStyle( fontSize: 20),
-                          ),
-                          Spacer(),
-                          Container(
-                            width: 100,
-                            child: _removeUser(document['userId'],),
-                          ),
-                          
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 9 / 10,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).hoverColor.withOpacity(0.50),
+                      border: Border.all(width: 2,color: MyColors.color4.withOpacity(0.60),),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 20),
+                        _avatar(document['userId']),
+                        SizedBox(width: 30,),
+                        Text(
+                          document['userName'],
+                          style: TextStyle( fontSize: 20),
+                        ),
+                        Spacer(),
+                        Container(
+                          width: 100,
+                          child: _removeUser(document['userId'],),
+                        ),  
+                      ],
+                    ),
                   );
                 }).toList(),
-              ));
+              ),
+          );
         },
       ),
     );

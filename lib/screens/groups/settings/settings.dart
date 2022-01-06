@@ -21,16 +21,15 @@ class _SettingsState extends State<SettingsView> {
   Widget build(BuildContext context) {
     final group = Provider.of<MyGroup>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
+      body: Container(
           padding: EdgeInsets.all(10),
-          margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
+          margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
           child: Column(
             children: [
               _buildImage(group),
-              SizedBox(height: 20,),
+              SizedBox(height: 25,),
               Text("Usuń członków",style: TextStyle(fontSize: 20),),
-              SizedBox(height: 10,),
+              SizedBox(height: 15,),
               Container(
                 height: 320,
                 child:Expanded(child: UsersManagement(group: group,)),
@@ -55,8 +54,7 @@ class _SettingsState extends State<SettingsView> {
             ],
           )
         ),
-      )
-    );
+      );
   }
 
   Widget _buildImage(MyGroup group) => Row(

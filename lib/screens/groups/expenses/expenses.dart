@@ -37,9 +37,11 @@ class _ExpensesState extends State<Expenses> {
         // _buildImage(group),
         // SizedBox(height: 15,),
         _dropDownCategory(group),
+        SizedBox(height: 20,),
+        Center(child:_picdate()),
+        SizedBox(height: 20,),
+        Text("Wydatki",style: TextStyle(fontSize: 20),),
         SizedBox(height: 15,),
-        Center(child:picdate()),
-        SizedBox(height: 5,),
         StreamProvider<List<MyExpenses>>.value(
           value: DatabaseService().getexpensesgroup(userr,group.groupid, dataRange==null ? dataRangeifnotcheck : dataRange), 
           initialData: [],
@@ -91,17 +93,17 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  Widget picdate() => Container(
+  Widget _picdate() => Container(
     width: MediaQuery.of(context).size.width/4*5,
     height: 40,
     alignment: Alignment.center,
     child: Row(
       children: [
-        SizedBox(width: 50,),
-        ElevatedButton(style: MyDecoration.remindbuttonStyle,onPressed: () => pickDateRange(context), child: Text(getFrom())),
+        SizedBox(width: 25,),
+        ElevatedButton(style: MyDecoration.remindbuttonStyle.copyWith(minimumSize:MaterialStateProperty.all<Size>(Size(150,50))),onPressed: () => pickDateRange(context), child: Text(getFrom())),
         Spacer(),
-        ElevatedButton(style: MyDecoration.remindbuttonStyle,onPressed:  () => pickDateRange(context), child: Text(getUntil())),
-        SizedBox(width: 50,),
+        ElevatedButton(style: MyDecoration.remindbuttonStyle.copyWith(minimumSize:MaterialStateProperty.all<Size>(Size(150,50))),onPressed:  () => pickDateRange(context), child: Text(getUntil())),
+        SizedBox(width: 25,),
       ],
     ),
   );
@@ -281,12 +283,15 @@ class _ExpenseListState extends State<ExpenseList>{
   Widget build(BuildContext context){
 
     final expense = Provider.of<List<MyExpenses>>(context);
-
-    return ListView.builder(
-      itemCount: expense.length ?? 0,
-      itemBuilder: (context,index){
-        return ExpenseTile(expense: expense[index]);
-      },
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: ListView.builder(
+        itemCount: expense.length ?? 0,
+        itemBuilder: (context,index){
+          return ExpenseTile(expense: expense[index]);
+        },
+      ),
     );
 
   }
