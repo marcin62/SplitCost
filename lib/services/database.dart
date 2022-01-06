@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:splitcost/models/myExpenses.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myMessage.dart';
 import 'package:splitcost/models/myUser.dart';
@@ -45,11 +47,13 @@ class DatabaseService {
   }
 
   Future addExpenses(String groupid,String price, String ownerid, String expenseid, String description ) async {
+    Timestamp date = Timestamp.fromDate(DateTime.now());
     return await groupsCollection.doc(groupid).collection('expenses').doc(expenseid).set({
       'expenseid' : expenseid,
       'ownerid' : ownerid,
       'price' : price,
       'description' : description,
+      'date' : date,
     });
   }
 
@@ -260,7 +264,21 @@ Future deleteExpense(String groupid,String expenseid) async
    Stream<List<MyMessage>> getMessages(){
     return userCollection.doc(uid).collection('messages').orderBy('date',descending: true).snapshots().map((snapshot) => snapshot.docs.map((document) => MyMessage.fromFirestore(document.data())).toList());
   }
+
   Stream<MyGroup> getGroup(String group){
     return groupsCollection.doc(group).snapshots().map((document) =>MyGroup.fromFirestore(document.data()));
+  }
+
+    Stream<List<MyExpenses>> getexpensesgroup(String user,String groupid,DateTimeRange daterange){
+    DateTime start = daterange.start;
+    DateTime end = daterange.end;
+    Query mylist = groupsCollection.doc(groupid).collection('expenses').where('date',isGreaterThanOrEqualTo: Timestamp.fromDate(start)).where('date',isLessThanOrEqualTo: Timestamp.fromDate(end));
+    if(user != "Wszystko")
+      mylist=mylist.where('ownerid',isEqualTo: user);
+    return mylist.orderBy('date',descending: true).snapshots().map((snapshot) => snapshot.docs.map((document) => MyExpenses.fromFirestore(document.data())).toList());
+  }
+
+   Stream<List<MyExpenses>> getexpenses(String groupid){
+    return groupsCollection.doc(groupid).collection('expenses').snapshots().map((snapshot) => snapshot.docs.map((document) => MyExpenses.fromFirestore(document.data())).toList());
   }
 }

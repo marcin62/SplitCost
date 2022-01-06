@@ -64,7 +64,7 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     isEmpty: group == null,
                     child: new DropdownButton(
-                     // value: group,
+                      value: group == "Wszystko" ? null:group,
                       isDense: true,
                       onChanged: (String newValue) {
                         setState(() {
