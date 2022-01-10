@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:splitcost/models/myDetails.dart';
 import 'package:splitcost/models/myExpenses.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
@@ -12,6 +13,8 @@ import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/services/database.dart';
 import 'package:splitcost/style/colors.dart';
 import 'package:splitcost/style/inputdecoration.dart';
+
+import 'detail.dart';
 
 
 class Expenses extends StatefulWidget {
@@ -283,13 +286,14 @@ class _ExpenseListState extends State<ExpenseList>{
   Widget build(BuildContext context){
 
     final expense = Provider.of<List<MyExpenses>>(context);
+    final group = Provider.of<MyGroup>(context);
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
       child: ListView.builder(
         itemCount: expense.length ?? 0,
         itemBuilder: (context,index){
-          return ExpenseTile(expense: expense[index]);
+          return ExpenseTile(expense: expense[index],group: group,);
         },
       ),
     );
@@ -299,12 +303,11 @@ class _ExpenseListState extends State<ExpenseList>{
 
 class ExpenseTile extends StatelessWidget {
   final MyExpenses expense;
-  ExpenseTile({this.expense});
+  final MyGroup group;
+  ExpenseTile({this.expense,this.group});
 
   @override
   Widget build(BuildContext context){
-    final user = Provider.of<MyUser>(context);
-    final group = Provider.of<MyGroup>(context);
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.symmetric(vertical: 3 , horizontal: 10),
@@ -320,26 +323,28 @@ class ExpenseTile extends StatelessWidget {
           Spacer(),
           Text(expense.price + " PLN",style: TextStyle(fontSize: 20),),
           SizedBox(width: 10,),
-          if(expense.ownerid==user.uid)
-            _buildRemoveExpenseButton(expense.expenseid,group.groupid)
-          else 
-            _buildInfoButton(),
+           _buildInfoButton(context,group),
+          // if(expense.ownerid==user.uid)
+          //   _buildRemoveExpenseButton(expense.expenseid,group.groupid)
+          // else 
+          //   _buildInfoButton(),
         ],
       ),
     );
   }
 
-   Widget _buildRemoveExpenseButton(String expenseid,String groupid) => ElevatedButton(
-    style: MyDecoration.remindbuttonStyle,
-    child: Icon(Icons.remove,color: Colors.redAccent,),
-    onPressed:() async {DatabaseService().deleteExpense(groupid, expenseid);}
-  );
+  //  Widget _buildRemoveExpenseButton(String expenseid,String groupid) => ElevatedButton(
+  //   style: MyDecoration.remindbuttonStyle,
+  //   child: Icon(Icons.remove,color: Colors.redAccent,),
+  //   onPressed:() async {DatabaseService().deleteExpense(groupid, expenseid);}
+  // );
 
-  Widget _buildInfoButton() => ElevatedButton(
+  Widget _buildInfoButton(BuildContext context,MyGroup group) => ElevatedButton(
     style: MyDecoration.remindbuttonStyle,
-    child: Icon(Icons.face,color: Colors.greenAccent,),
-    onPressed: () => {
-      
+    child: Icon(Icons.arrow_forward_rounded,color: Colors.greenAccent,),
+    onPressed: () => {Navigator.push(
+                    context,
+       MaterialPageRoute(builder: (context) => DetailView(expense: expense,group: group,))),
     },
   );
   

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:splitcost/models/myDetails.dart';
 import 'package:splitcost/models/myExpenses.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myMessage.dart';
@@ -66,6 +67,21 @@ class DatabaseService {
     });
   }
 
+  Future deleteDetails(String groupid,String expensesid) async {
+    // return await groupsCollection.doc(groupid).collection('expenses').doc(expensesid).collection('details').doc(id).set({
+    //   'owner' : owner,
+    //   'detailid' : id,
+    //   'howmuch' : howmuch,
+    //   'who' : who,
+    // });
+
+  groupsCollection.doc(groupid).collection('expenses').doc(expensesid).collection('details').get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs){
+        ds.reference.delete();
+      }
+    });
+  }
+
   Future addMessageToUser(String userid,String message, Timestamp date,String groupid) async {
     String id =  Uuid().v4();
     return await userCollection.doc(userid).collection('messages').doc(id).set({
@@ -121,10 +137,14 @@ class DatabaseService {
         }
       } 
     }
-    return price.toString();
+    return price.toStringAsFixed(2);
 }
  Future<String> getUserName(){
    return (userCollection.doc(uid).snapshots() as Map<String,dynamic>)['userName'];
+ }
+
+ Future<dynamic> getCertainUserName(String userid){
+   return (userCollection.doc(userid).snapshots() as Map<String,dynamic>)['userName'];
  }
 
  Future<String> getUsersKey(String uid) async {
@@ -280,5 +300,13 @@ Future deleteExpense(String groupid,String expenseid) async
 
    Stream<List<MyExpenses>> getexpenses(String groupid){
     return groupsCollection.doc(groupid).collection('expenses').snapshots().map((snapshot) => snapshot.docs.map((document) => MyExpenses.fromFirestore(document.data())).toList());
+  }
+
+   Stream<List<MyDetails>> getDetails(String group,String expense){
+    return groupsCollection.doc(group).collection('expenses').doc(expense).collection('details').snapshots().map((snapshot) => snapshot.docs.map((document) => MyDetails.fromFirestore(document.data())).toList());
+  }
+
+   Stream<List<UserData>> getUsers(){
+    return userCollection.snapshots().map((snapshot) => snapshot.docs.map((document) => UserData.fromFirestore(document.data())).toList());
   }
 }

@@ -16,4 +16,8 @@ class FirebaseApi {
   static Future<dynamic> loadImageWithoutContext(String image) async {
     return await FirebaseStorage.instance.ref().child(image).getDownloadURL().catchError(print);
   }
+
+  static Future<dynamic> removeimage(String image) async {
+    return await FirebaseStorage.instance.ref().child(image).delete();
+  }
 }

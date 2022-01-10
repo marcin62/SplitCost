@@ -29,6 +29,10 @@ class AuthService {
     }
   }
 
+  // Future checkphonenumber(String phone)async{
+  //   await _auth.verifyPhoneNumber(phoneNumber: phoneNumber, verificationCompleted: verificationCompleted, verificationFailed: verificationFailed, codeSent: codeSent, codeAutoRetrievalTimeout: codeAutoRetrievalTimeout)
+  // }
+
   // sign in email & password
   Future signInWithEmailAndPassword(String email, String password) async {
     try{

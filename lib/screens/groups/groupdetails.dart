@@ -4,6 +4,7 @@ import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/screens/groups/expenses/expenses.dart';
 import 'package:splitcost/screens/groups/members/members.dart';
 import 'package:splitcost/screens/groups/settings/settings.dart';
+import 'package:splitcost/screens/groups/statistic/statistic.dart';
 import 'package:splitcost/services/database.dart';
 
 class GroupDetail extends StatefulWidget {
@@ -26,6 +27,7 @@ class _GroupDetailState extends State<GroupDetail> {
   Widget _selectScreen(BuildContext context){ 
     if(_selectedIndex == 0) return Expenses(); 
     if(_selectedIndex == 1) return Members();
+    if(_selectedIndex == 2) return Statistic();
     else return SettingsView();
   }
 
@@ -53,6 +55,10 @@ class _GroupDetailState extends State<GroupDetail> {
           BottomNavigationBarItem(
             icon: Icon(Icons.group,),
             label: 'Osoby',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Statystyki',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
