@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
+import 'package:splitcost/screens/groups/calculated_state.dart/calculated.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
 import 'package:splitcost/screens/groups/settings/usersmanagement.dart';
 import 'package:splitcost/services/database.dart';
@@ -20,13 +22,13 @@ class _SettingsState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     final group = Provider.of<MyGroup>(context);
-    return Scaffold(
+    return group.iscalculated ? Calculate() : Scaffold(
       body: Container(
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
           child: Column(
             children: [
-              _buildImage(group),
+              // _buildImage(group),
               SizedBox(height: 25,),
               Text("Usuń członków",style: TextStyle(fontSize: 20),),
               SizedBox(height: 15,),
@@ -35,6 +37,11 @@ class _SettingsState extends State<SettingsView> {
                 child:Expanded(child: UsersManagement(group: group,)),
               ),
               SizedBox(height: 20,),
+              Container(
+                width: MediaQuery.of(context).size.width/5*4,
+                child: _buildChangeStateButton(group),
+              ),
+              SizedBox(height: 10,),
               Container(
                 width: MediaQuery.of(context).size.width/5*4,
                 child: _buildGroupName(group),
@@ -111,6 +118,29 @@ class _SettingsState extends State<SettingsView> {
     ),
     onPressed:() async {
      _changegroupname(group);
+    }
+  );
+
+    Widget _buildChangeStateButton(MyGroup group) => ElevatedButton(
+     style: MyDecoration.remindbuttonStyle,
+    child: Row(
+      children: [
+        SizedBox(width: 30,),
+        Text('Tryb rozliczeniowy',style: TextStyle(fontSize: 20),),
+        Spacer(),
+        Icon(Icons.photo_album,color: Colors.greenAccent,),
+        SizedBox(width: 30,)
+      ],
+    ),
+    onPressed:() async {
+      List<dynamic> newprice = new List();
+      for(int i=0;i<group.members.length;i++)
+      {
+        String temp = await DatabaseService().gettotalpay(group.members[i], group.groupid);
+        newprice.add(temp);
+      }
+      await DatabaseService().updategroupprices(group.groupid, newprice);
+      await DatabaseService().updateGrouCalculated(group.groupid, !group.iscalculated);
     }
   );
 

@@ -6,6 +6,7 @@ import 'package:splitcost/models/myDetails.dart';
 import 'package:splitcost/models/myExpenses.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
+import 'package:splitcost/screens/groups/calculated_state.dart/calculated.dart';
 import 'package:splitcost/screens/groups/expenses/splitEquelly.dart';
 import 'package:splitcost/screens/groups/expenses/splitPercent.dart';
 import 'package:splitcost/screens/groups/expenses/splitUnEquelly.dart';
@@ -31,7 +32,7 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     final group = Provider.of<MyGroup>(context);
-     return Scaffold(
+     return group.iscalculated ? Calculate() : Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),

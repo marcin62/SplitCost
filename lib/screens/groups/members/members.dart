@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splitcost/models/myGroup.dart';
 import 'package:splitcost/models/myUser.dart';
+import 'package:splitcost/screens/groups/calculated_state.dart/calculated.dart';
 import 'package:splitcost/screens/groups/members/addNewMember.dart';
 import 'package:splitcost/screens/groups/members/paydebt.dart';
 import 'package:splitcost/screens/groups/settings/firebaseApi.dart';
@@ -25,7 +26,7 @@ class _MembersState extends State<Members> {
     final user = Provider.of<MyUser>(context);
     final group = Provider.of<MyGroup>(context);
      return StatefulBuilder( builder: (context,setState){
-    return Scaffold(
+    return group.iscalculated ? Calculate() : Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 10 , horizontal: 10),
@@ -69,6 +70,8 @@ class _MembersState extends State<Members> {
                 ),); });
               },
             ),),
+            // SizedBox(height: 5,),
+            // _buildChangeStateButton(group),
           ],
         ),
       ),

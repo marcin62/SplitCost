@@ -20,7 +20,7 @@ class Group extends StatefulWidget {
 class _GroupState extends State<Group> {
   @override
   Widget build(BuildContext context) {
-    MyGroup myGroup = new MyGroup(groupName:  widget.groupname,groupid: widget.groupid,members: widget.members,ownerid: widget.groupid);
+    MyGroup myGroup = new MyGroup(groupName:  widget.groupname,groupid: widget.groupid,members: widget.members,ownerid: widget.groupid,iscalculated: false);
     return Center(
       child: Container(
         padding: EdgeInsets.all(10),
@@ -51,7 +51,7 @@ class _GroupState extends State<Group> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid,members: widget.members))),
+                    MaterialPageRoute(builder: (context) => GroupDetail(group: MyGroup(ownerid: widget.ownerid,groupName: widget.groupname,groupid: widget.groupid,members: widget.members,iscalculated: false))),
                   ).then((value) => setState(()=>{}));
                 },
                 child: Icon(Icons.arrow_forward_rounded, color: Colors.greenAccent, size: 40,) ,

@@ -32,12 +32,26 @@ class DatabaseService {
       'groupId' : groupid,
       'ownerId' : ownerid,
       'members' : members,
+      'iscalculated': false,
+      'prices' : [],
     });
   }
 
   Future updateGroupName(String groupName, String groupid) async {
     return await groupsCollection.doc(groupid).update({
       'groupName' : groupName,
+    });
+  }
+
+  Future updateGrouCalculated(String groupid,bool calculated) async {
+    return await groupsCollection.doc(groupid).update({
+      'iscalculated' : calculated,
+    });
+  }
+
+   Future updategroupprices(String groupid,List<dynamic> prices) async {
+    return await groupsCollection.doc(groupid).update({
+      'prices' : prices,
     });
   }
 
@@ -66,6 +80,7 @@ class DatabaseService {
       'who' : who,
     });
   }
+
 
   Future deleteDetails(String groupid,String expensesid) async {
     // return await groupsCollection.doc(groupid).collection('expenses').doc(expensesid).collection('details').doc(id).set({
@@ -309,4 +324,31 @@ Future deleteExpense(String groupid,String expenseid) async
    Stream<List<UserData>> getUsers(){
     return userCollection.snapshots().map((snapshot) => snapshot.docs.map((document) => UserData.fromFirestore(document.data())).toList());
   }
+
+  Future<String> gettotalpay(String uuid,String groupid) async {
+    double price = 0;
+    QuerySnapshot expensequery = await groupsCollection.doc(groupid).collection('expenses').get();
+    for (int i = 0 ;i <expensequery.docs.length;i++){
+      QuerySnapshot doc = await expensequery.docs.elementAt(i).reference.collection('details').get();
+
+      for(int k = 0; k< doc.docs.length;k++){
+        DocumentSnapshot document = doc.docs.elementAt(k);
+        if(document['owner'] == uuid)
+        {
+            price += double.parse(document['howmuch']);
+        }else if(document['who'] == uuid){
+            price -= double.parse(document['howmuch']);
+        }
+      } 
+    }
+    return price.toStringAsFixed(2);
+}
+
+Future deleteallexpenses(String groupid)async {
+  QuerySnapshot expensequery = await groupsCollection.doc(groupid).collection('expenses').get();
+    for (int i = 0 ;i <expensequery.docs.length;i++){
+      DocumentSnapshot doc = expensequery.docs.elementAt(i);
+      await deleteDetails(groupid, doc['expenseid']);
+    }
+}
 }

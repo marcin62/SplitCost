@@ -8,9 +8,6 @@ import 'package:splitcost/services/database.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class Statistic extends StatefulWidget {
 

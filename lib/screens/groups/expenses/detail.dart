@@ -26,14 +26,13 @@ class DetailView extends StatefulWidget {
 class _DetailViewState extends State<DetailView> {
   List<String> debt;
   List<String> users;
+  bool receipt = false;
   @override
   Widget build(BuildContext context) {
-    //final group = Provider.of<MyGroup>(context);
-    //final detail = Provider.of<List<MyDetails>>(context);
     final user = Provider.of<MyUser>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
+      body: //SingleChildScrollView(
+         Container(
           padding: EdgeInsets.all(20),
           child: StreamProvider<List<MyDetails>>.value(
             value: DatabaseService().getDetails(widget.group.groupid, widget.expense.expenseid), 
@@ -43,36 +42,46 @@ class _DetailViewState extends State<DetailView> {
                 SizedBox(height: 30,),
                 Text(widget.expense.description,style: TextStyle(fontSize: 30),),
                 SizedBox(height: 10,),
-                Container(
-                  height: MediaQuery.of(context).size.height*2/5,
-                  // child: StreamProvider<List<MyDetails>>.value(
-                  //   value: DatabaseService().getDetails(widget.group.groupid, widget.expense.expenseid), 
-                  //   initialData: [],
-                    child: DetailView2(group:widget.group,expense:widget.expense),
-                    // ),
+                 Row(
+                  children: [
+                    Spacer(),
+                    Text("Pokaż paragon",style: TextStyle(fontSize: 17),),
+                    Checkbox(value: receipt, onChanged:(bool val) {setState(()=>{ 
+                      receipt= !receipt });}),
+                      Spacer(),
+                  ],
                 ),
                 SizedBox(height: 10,),
-                if(user.uid==widget.expense.ownerid)
+                // Container(
+                //   height: MediaQuery.of(context).size.height/5*4,
+                //   child: ,
+                // ),
+                receipt==false ? Container(
+                  height: MediaQuery.of(context).size.height*3/5,
+                    child: DetailView2(group:widget.group,expense:widget.expense),
+                ) : SizedBox(height: 0,),
+                SizedBox(height: 10,),
+                if(user.uid==widget.expense.ownerid && receipt ==false)
                   _buildbuttons(),
 
-                GestureDetector(
+                receipt ==true ?GestureDetector(
                   child: Container(
                     width: MediaQuery.of(context).size.width*4.5/5,
-                    height: MediaQuery.of(context).size.height*4.5/5,
+                    height: MediaQuery.of(context).size.height*3.5/5,
                     child: _buildImage(widget.expense),
                   ),
                   onTap: ()  async => {
                     if(user.uid==widget.expense.ownerid)
                       await uploadFile(widget.expense.expenseid),
                   },
-                ),
+                ):SizedBox(height: 0,),
               ],
             ),
           ),
-        ),
       ),
     );
   }
+  
 
   Future uploadFile(String destination) async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
