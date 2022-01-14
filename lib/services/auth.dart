@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:splitcost/models/myUser.dart';
 import 'package:splitcost/services/database.dart';
@@ -28,10 +27,6 @@ class AuthService {
       return null;
     }
   }
-
-  // Future checkphonenumber(String phone)async{
-  //   await _auth.verifyPhoneNumber(phoneNumber: phoneNumber, verificationCompleted: verificationCompleted, verificationFailed: verificationFailed, codeSent: codeSent, codeAutoRetrievalTimeout: codeAutoRetrievalTimeout)
-  // }
 
   // sign in email & password
   Future signInWithEmailAndPassword(String email, String password) async {

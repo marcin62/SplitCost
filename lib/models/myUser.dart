@@ -13,7 +13,7 @@ class UserData {
   final String phone;
   final String email;
 
-  UserData({this.email,this.name,this.phone,this.uid});
+UserData({this.email,this.name,this.phone,this.uid});
 Map<String,dynamic> toMap(){
     return {
       'email' : email,

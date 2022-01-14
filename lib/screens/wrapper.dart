@@ -11,7 +11,6 @@ class Wrapper extends StatelessWidget {
 
     final user = Provider.of<MyUser>(context);
 
-    // Check if Login then show apropriate page
     if (user == null){
       return Authenticate();
     } else {
@@ -19,3 +18,4 @@ class Wrapper extends StatelessWidget {
     }
   }
 }
+
